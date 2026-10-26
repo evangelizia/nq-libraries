@@ -16,20 +16,30 @@
       "id": "enter",
       "do": [{"act": "join", "map": "IceStormArena", "cell": "r4", "pad": "Bottom"}],
       "wait": [{"when": "here", "map": "IceStormArena"}],
-      "timeout": 30,
+      "timeout": 45,
       "retry": 3,
-      "then": "route"
+      "then": "low-enter"
+    },
+    {
+      "id": "low-enter",
+      "branch": [{"when": "here", "cell": "r4", "then": "farm-low"}],
+      "do": [{"act": "moveTo", "cell": "r4", "pad": "Bottom"}],
+      "wait": [{"when": "here", "cell": "r4"}],
+      "timeout": 20,
+      "retry": 2,
+      "then": "farm-low"
     },
     {
       "id": "route",
       "branch": [
-        {"when": "levelBelow", "value": 75, "then": "farm-low"},
+        {"when": "levelBelow", "value": 75, "then": "low-enter"},
         {"when": "here", "cell": "r3c", "then": "farm-high"},
         {"when": "levelBelow", "value": 100, "then": "high-enter"}
       ]
     },
     {
       "id": "high-enter",
+      "branch": [{"when": "here", "cell": "r3c", "then": "farm-high"}],
       "do": [{"act": "moveTo", "cell": "r3c", "pad": "Top"}],
       "wait": [{"when": "here", "cell": "r3c"}],
       "timeout": 20,
