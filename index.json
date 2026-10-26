@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "class": [
+    {
+      "id": "lightcaster",
+      "class": "LightCaster",
+      "role": "offensive caster",
+      "aliases": [
+        "LightCaster Class",
+        "Light Caster"
+      ],
+      "file": "class/lightcaster.json",
+      "sha256": "57113c7ab56a3db2b52eb9bcc01bc5148287aa35d71bd09161b30e426a75ff3f"
+    }
+  ],
+  "bots": []
+}

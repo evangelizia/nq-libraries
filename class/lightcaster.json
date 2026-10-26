@@ -1,0 +1,14 @@
+{
+  "id": "lightcaster",
+  "class": "LightCaster",
+  "aliases": ["LightCaster Class", "Light Caster"],
+  "role": "offensive caster",
+  "notes": "In The Spotlight stacks up to 50 and only lasts 10s after the last cast, so Lingering Light stays in the rotation: it is both a 100% nuke and the only way to build and hold the debuff. Illuminate is a 12s heal and buff, kept up by its aura rule.",
+  "rotation": ["Burned by Light", "Light Blast", "Lingering Light"],
+  "rules": [
+    {"when": "hpBelow", "value": 35, "action": "Potion"},
+    {"when": "mpBelow", "value": 12, "action": "Potion"},
+    {"when": "hpBelow", "value": 55, "action": "Illuminate"},
+    {"when": "missingAura", "aura": "Illuminated", "action": "Illuminate"}
+  ]
+}
