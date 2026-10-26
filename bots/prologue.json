@@ -1,0 +1,345 @@
+{
+  "schema": 1,
+  "id": "prologue",
+  "name": "Prologue · 0th Chaos Lord",
+  "bundle": false,
+  "notes": "The whole prologue in one run: 183, 176, 177, 178, 179 and 180 on the Swordhaven side, then 196 and 6216 for Gravelyn. Each pass asks the server for the eight quests and takes the first one it can still work on, so a run started halfway through picks up where the chain stands and a run with nothing left stops itself. A quest that was turned in is recognised the way the quest log does it - a one-time quest whose slot counter has caught up - because a finished quest keeps a row and no status, exactly like an open one. Every entry step waits for the quest to be in hand as well as for the map, so a refused accept ends the run with a named step instead of farming a quest that never started. Two of the eight are not fights: 179 wants five knights spoken to and 6216 wants five gold piles clicked plus an Unlife Insurance Bond from shop 1559, so those click their sparkle on a loop until the quest asks for nothing. Both loops are bounded by their retries. The bond is bought only if it is not already in the bag, and the packet goes straight down the wire because the client's own buy call opens a message box on any failed check and a bot cannot dismiss one. Loot is left alone on purpose: quest items arrive as temp items, and a decline rule that swallowed a normal drop would be one more way to break a story step.",
+  "combat": {"target": "nearest", "rest": 60},
+  "stop": [
+    {"when": "bagFreeBelow", "value": 2, "say": "bag almost full"},
+    {"when": "runFor", "value": 7200, "say": "two hours on this route"}
+  ],
+  "start": "route",
+  "steps": [
+    {
+      "id": "route",
+      "do": [{"act": "quests", "ids": [183, 176, 177, 178, 179, 180, 196, 6216]}],
+      "wait": [{"when": "elapsed", "value": 2}],
+      "timeout": 30,
+      "retry": 3,
+      "then": "pick"
+    },
+    {
+      "id": "pick",
+      "branch": [
+        {"when": "questOffered", "id": 183, "then": "q183"},
+        {"when": "questOffered", "id": 176, "then": "q176"},
+        {"when": "questOffered", "id": 177, "then": "q177"},
+        {"when": "questOffered", "id": 178, "then": "q178"},
+        {"when": "questOffered", "id": 179, "then": "q179"},
+        {"when": "questOffered", "id": 180, "then": "q180"},
+        {"when": "questOffered", "id": 196, "then": "q196"},
+        {"when": "questOffered", "id": 6216, "then": "q6216"}
+      ],
+      "else": "done"
+    },
+    {
+      "id": "done",
+      "do": [{"act": "stop", "msg": "prologue complete: nothing left to accept"}]
+    },
+
+    {
+      "id": "q183",
+      "branch": [{"when": "questComplete", "id": 183, "then": "q183-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 183},
+        {"act": "join", "map": "portalundead", "cell": "Enter", "pad": "Right"}
+      ],
+      "wait": [
+        {"when": "here", "map": "portalundead", "cell": "Enter"},
+        {"when": "questActive", "id": 183}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q183-farm"
+    },
+    {
+      "id": "q183-farm",
+      "branch": [{"when": "questComplete", "id": 183, "then": "q183-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [{"when": "elapsed", "value": 15}],
+      "timeout": 0,
+      "then": "q183-farm"
+    },
+    {
+      "id": "q183-send",
+      "do": [{"act": "completeQuest", "id": 183}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 183}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+
+    {
+      "id": "q176",
+      "branch": [{"when": "questComplete", "id": 176, "then": "q176-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 176},
+        {"act": "join", "map": "swordhavenundead", "cell": "Enter", "pad": "Spawn"}
+      ],
+      "wait": [
+        {"when": "here", "map": "swordhavenundead", "cell": "Enter"},
+        {"when": "questActive", "id": 176}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q176-farm"
+    },
+    {
+      "id": "q176-farm",
+      "branch": [{"when": "questComplete", "id": 176, "then": "q176-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [{"when": "elapsed", "value": 15}],
+      "timeout": 0,
+      "then": "q176-farm"
+    },
+    {
+      "id": "q176-send",
+      "do": [{"act": "completeQuest", "id": 176}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 176}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+
+    {
+      "id": "q177",
+      "branch": [{"when": "questComplete", "id": 177, "then": "q177-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 177},
+        {"act": "join", "map": "swordhavenundead", "cell": "Extra1", "pad": "Center"}
+      ],
+      "wait": [
+        {"when": "here", "map": "swordhavenundead", "cell": "Extra1"},
+        {"when": "questActive", "id": 177}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q177-farm"
+    },
+    {
+      "id": "q177-farm",
+      "branch": [{"when": "questComplete", "id": 177, "then": "q177-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [{"when": "elapsed", "value": 15}],
+      "timeout": 0,
+      "then": "q177-farm"
+    },
+    {
+      "id": "q177-send",
+      "do": [{"act": "completeQuest", "id": 177}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 177}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+
+    {
+      "id": "q178",
+      "branch": [{"when": "questComplete", "id": 178, "then": "q178-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 178},
+        {"act": "join", "map": "swordhavenundead", "cell": "Gates", "pad": "Center"}
+      ],
+      "wait": [
+        {"when": "here", "map": "swordhavenundead", "cell": "Gates"},
+        {"when": "questActive", "id": 178}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q178-farm"
+    },
+    {
+      "id": "q178-farm",
+      "branch": [{"when": "questComplete", "id": 178, "then": "q178-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [{"when": "elapsed", "value": 15}],
+      "timeout": 0,
+      "then": "q178-farm"
+    },
+    {
+      "id": "q178-send",
+      "do": [{"act": "completeQuest", "id": 178}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 178}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+
+    {
+      "id": "q179",
+      "branch": [{"when": "questComplete", "id": 179, "then": "q179-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 179},
+        {"act": "join", "map": "castleundead", "cell": "Enter", "pad": "Spawn"}
+      ],
+      "wait": [
+        {"when": "here", "map": "castleundead", "cell": "Enter"},
+        {"when": "questActive", "id": 179}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q179-talk"
+    },
+    {
+      "id": "q179-talk",
+      "do": [{"act": "mapItem", "id": 62000}],
+      "wait": [{"when": "questComplete", "id": 179}],
+      "timeout": 8,
+      "retry": 40,
+      "then": "q179-send"
+    },
+    {
+      "id": "q179-send",
+      "do": [{"act": "completeQuest", "id": 179}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 179}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+
+    {
+      "id": "q180",
+      "branch": [{"when": "questComplete", "id": 180, "then": "q180-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 180},
+        {"act": "join", "map": "castleundead", "cell": "Enter", "pad": "Spawn"}
+      ],
+      "wait": [
+        {"when": "here", "map": "castleundead", "cell": "Enter"},
+        {"when": "questActive", "id": 180}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q180-farm"
+    },
+    {
+      "id": "q180-farm",
+      "branch": [{"when": "questComplete", "id": 180, "then": "q180-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [{"when": "elapsed", "value": 15}],
+      "timeout": 0,
+      "then": "q180-farm"
+    },
+    {
+      "id": "q180-send",
+      "do": [{"act": "completeQuest", "id": 180}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 180}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+
+    {
+      "id": "q196",
+      "branch": [{"when": "questComplete", "id": 196, "then": "q196-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 196},
+        {"act": "join", "map": "chaoscrypt", "cell": "Boss2", "pad": "Right"}
+      ],
+      "wait": [
+        {"when": "here", "map": "chaoscrypt", "cell": "Boss2"},
+        {"when": "questActive", "id": 196}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q196-farm"
+    },
+    {
+      "id": "q196-farm",
+      "branch": [{"when": "questComplete", "id": 196, "then": "q196-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [{"when": "elapsed", "value": 15}],
+      "timeout": 0,
+      "then": "q196-farm"
+    },
+    {
+      "id": "q196-send",
+      "do": [{"act": "completeQuest", "id": 196}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 196}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+
+    {
+      "id": "q6216",
+      "branch": [{"when": "questComplete", "id": 6216, "then": "q6216-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 6216},
+        {"act": "join", "map": "prison", "cell": "Open", "pad": "Left"}
+      ],
+      "wait": [
+        {"when": "here", "map": "prison", "cell": "Open"},
+        {"when": "questActive", "id": 6216}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q6216-piles"
+    },
+    {
+      "id": "q6216-piles",
+      "do": [{"act": "mapItem", "id": 62209}],
+      "wait": [{"when": "tempAtLeast", "item": "Pile of Gold", "value": 5}],
+      "timeout": 6,
+      "retry": 40,
+      "then": "q6216-shop"
+    },
+    {
+      "id": "q6216-shop",
+      "branch": [
+        {"when": "itemAtLeast", "item": "Unlife Insurance Bond", "value": 1, "then": "q6216-send"}
+      ],
+      "do": [{"act": "loadShop", "id": 1559}],
+      "wait": [{"when": "shopLoaded", "id": 1559}],
+      "timeout": 15,
+      "retry": 3,
+      "then": "q6216-buy"
+    },
+    {
+      "id": "q6216-buy",
+      "do": [{"act": "buy", "item": "Unlife Insurance Bond"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "itemAtLeast", "item": "Unlife Insurance Bond", "value": 1},
+          {"when": "questComplete", "id": 6216}
+        ]}
+      ],
+      "timeout": 10,
+      "retry": 6,
+      "then": "q6216-send"
+    },
+    {
+      "id": "q6216-send",
+      "do": [{"act": "completeQuest", "id": 6216}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 6216}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    }
+  ]
+}

@@ -41,6 +41,12 @@
       "sha256": "7068bb3eeec38a28ecf9fc93df1ffbf0000b1a50e7bada5b71e7628f544cf996"
     },
     {
+      "id": "prologue",
+      "name": "Prologue · 0th Chaos Lord",
+      "file": "bots/prologue.json",
+      "sha256": "5f452a00d06a9722d95bf0182f3a61bf982fa1a61f91507b65b2a05d53b44193"
+    },
+    {
       "id": "shadowbattleon",
       "name": "ShadowBattleOn · medal quests",
       "file": "bots/shadowbattleon.json",
