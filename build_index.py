@@ -42,7 +42,7 @@ def entry(path):
         fail(f"{path.name}: missing id")
 
     out = {"id": pid}
-    for key in ("class", "role"):
+    for key in ("class", "role", "name"):
         if isinstance(data.get(key), str) and data[key]:
             out[key] = data[key]
     if isinstance(data.get("aliases"), list) and data["aliases"]:

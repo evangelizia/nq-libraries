@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "id": "icestormarena",
+  "name": "IceStormArena · XP / CP / gold",
+  "notes": "Farms the low cell below level 75, then moves up once the character outlevels it. Re-checks the route every 30 s so a level-up is picked up mid-farm.",
+  "combat": {"target": "nearest", "rest": 60},
+  "stop": [
+    {"when": "bagFreeBelow", "value": 2, "say": "bag almost full"},
+    {"when": "itemAtLeast", "item": "Treasure Chest", "value": 250, "say": "250 treasure chests"},
+    {"when": "droppedRarity", "say": "rare drop"},
+    {"when": "levelAtLeast", "value": 100, "say": "level 100"}
+  ],
+  "start": "enter",
+  "steps": [
+    {
+      "id": "enter",
+      "do": [{"act": "join", "map": "IceStormArena", "cell": "r4", "pad": "Bottom"}],
+      "wait": [{"when": "here", "map": "IceStormArena"}],
+      "timeout": 30,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "route",
+      "branch": [
+        {"when": "levelBelow", "value": 75, "then": "farm-low"},
+        {"when": "here", "cell": "r3c", "then": "farm-high"},
+        {"when": "levelBelow", "value": 100, "then": "high-enter"}
+      ]
+    },
+    {
+      "id": "high-enter",
+      "do": [{"act": "moveTo", "cell": "r3c", "pad": "Top"}],
+      "wait": [{"when": "here", "cell": "r3c"}],
+      "timeout": 20,
+      "retry": 2,
+      "then": "farm-high"
+    },
+    {
+      "id": "farm-low",
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [{"when": "elapsed", "value": 30}],
+      "timeout": 0,
+      "then": "route"
+    },
+    {
+      "id": "farm-high",
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [{"when": "elapsed", "value": 30}],
+      "timeout": 0,
+      "then": "route"
+    }
+  ]
+}

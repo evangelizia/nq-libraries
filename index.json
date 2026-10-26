@@ -13,5 +13,12 @@
       "sha256": "57113c7ab56a3db2b52eb9bcc01bc5148287aa35d71bd09161b30e426a75ff3f"
     }
   ],
-  "bots": []
+  "bots": [
+    {
+      "id": "icestormarena",
+      "name": "IceStormArena · XP / CP / gold",
+      "file": "bots/icestormarena.json",
+      "sha256": "9553fdc631e9d9ebff5400e7782b2c2abc949d808d29e6dc5846e907b2882547"
+    }
+  ]
 }
