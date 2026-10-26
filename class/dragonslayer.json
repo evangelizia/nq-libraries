@@ -1,0 +1,14 @@
+{
+  "id": "dragonslayer",
+  "class": "Dragonslayer",
+  "aliases": ["Dragonslayer Class"],
+  "role": "tank melee",
+  "bundle": false,
+  "notes": "Mana is the only resource that matters here: every skill but Dragon's Bane is free, and the Tank model returns mana for striking, for being struck, and 5 more from Scorched Steel itself. Scorched Steel leads because it has the shortest cooldown and carries Charred, -15% damage resistance for 15s, so the debuff is up before anything else lands. Impale follows for the Impaled DoT and the Adrenaline Flow heal, Incapacitate last for 200% damage and Weakened. Dragon's Bane is a reaction rather than a rotation slot: 50 mana is the largest cost in the kit, so it only fires above 70% where the cast cannot fail and leave 'Not enough mana' in chat. On Dragonkin it applies Dragonbane, which the next skill consumes — Scorched Steel turns it into Cindered Scales for -30% resistance, Impale into Infected Wound, Incapacitate into a 3s stun. A later Impale into an Infected Wound target grants Adrenaline Surge, +15% haste and crit.",
+  "rotation": ["Scorched Steel", "Impale", "Incapacitate"],
+  "rules": [
+    {"when": "hpBelow", "value": 35, "action": "Potion"},
+    {"when": "mpBelow", "value": 20, "action": "Potion"},
+    {"when": "mpAbove", "value": 70, "action": "Dragon's Bane"}
+  ]
+}

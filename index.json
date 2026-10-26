@@ -2,6 +2,16 @@
   "schema": 1,
   "class": [
     {
+      "id": "dragonslayer",
+      "class": "Dragonslayer",
+      "role": "tank melee",
+      "aliases": [
+        "Dragonslayer Class"
+      ],
+      "file": "class/dragonslayer.json",
+      "sha256": "555876c47a3cde2f9ab90c31b7840ec6ae3a73a4b186416daa4b26c1c4a460b8"
+    },
+    {
       "id": "lightcaster",
       "class": "LightCaster",
       "role": "offensive caster",
