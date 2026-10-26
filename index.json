@@ -29,6 +29,12 @@
       "name": "IceStormArena · XP / CP / gold",
       "file": "bots/icestormarena.json",
       "sha256": "7068bb3eeec38a28ecf9fc93df1ffbf0000b1a50e7bada5b71e7628f544cf996"
+    },
+    {
+      "id": "shadowbattleon",
+      "name": "ShadowBattleOn · medal quests",
+      "file": "bots/shadowbattleon.json",
+      "sha256": "6c421f3d411bc0a868dfb8b27baf0e23fcd743ecaf5de9cccb79b19fe8623003"
     }
   ]
 }

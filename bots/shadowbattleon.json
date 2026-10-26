@@ -1,0 +1,91 @@
+{
+  "schema": 1,
+  "id": "shadowbattleon",
+  "name": "ShadowBattleOn · medal quests",
+  "notes": "Farms Doomed Trolls in the Enter cell and turns in Shadow Hunt Medal (5) and Mega Shadow Hunt Medal (3) on repeat: 12000 XP and 2500 gold a cycle. Everything happens on the spawn cell, so there is no route to walk. Medals are taken from the drop stack and everything else is declined; temp quest items are left alone. Every pass re-reads the quest states, so a run started on a half finished cycle picks up where it is instead of accepting over the top of it. No rare drop guard: a farm that stops on loot is not unattended.",
+  "combat": {"target": "nearest", "rest": 60, "monsters": ["Doomed Troll"]},
+  "loot": ["Shadow Hunt Medal", "Mega Shadow Hunt Medal"],
+  "decline": true,
+  "stop": [
+    {"when": "bagFreeBelow", "value": 3, "say": "bag almost full"},
+    {"when": "levelAtLeast", "value": 100, "say": "level 100"}
+  ],
+  "start": "enter",
+  "steps": [
+    {
+      "id": "enter",
+      "do": [{"act": "join", "map": "shadowbattleon", "cell": "Enter", "pad": "Spawn"}],
+      "wait": [{"when": "here", "map": "shadowbattleon", "cell": "Enter"}],
+      "timeout": 45,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "route",
+      "branch": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 9421},
+          {"when": "questComplete", "id": 9422}
+        ], "then": "turnin-medal"},
+        {"when": "all", "of": [
+          {"when": "questActive", "id": 9421},
+          {"when": "questActive", "id": 9422}
+        ], "then": "farm"}
+      ],
+      "do": [
+        {"act": "acceptQuest", "id": 9421},
+        {"act": "acceptQuest", "id": 9422}
+      ],
+      "wait": [{"when": "all", "of": [
+        {"when": "questActive", "id": 9421},
+        {"when": "questActive", "id": 9422}
+      ]}],
+      "timeout": 6,
+      "retry": 8,
+      "then": "farm"
+    },
+    {
+      "id": "farm",
+      "branch": [{"when": "all", "of": [
+        {"when": "questComplete", "id": 9421},
+        {"when": "questComplete", "id": 9422}
+      ], "then": "turnin-medal"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [{"when": "elapsed", "value": 20}],
+      "timeout": 0,
+      "then": "farm"
+    },
+    {
+      "id": "turnin-medal",
+      "branch": [{"when": "questComplete", "id": 9421, "then": "send-medal"}],
+      "else": "turnin-mega"
+    },
+    {
+      "id": "send-medal",
+      "do": [{"act": "completeQuest", "id": 9421}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 9421}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "turnin-mega"
+    },
+    {
+      "id": "turnin-mega",
+      "branch": [{"when": "questComplete", "id": 9422, "then": "send-mega"}],
+      "else": "route"
+    },
+    {
+      "id": "send-mega",
+      "do": [{"act": "completeQuest", "id": 9422}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 9422}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    }
+  ]
+}
