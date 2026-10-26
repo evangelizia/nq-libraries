@@ -22,14 +22,23 @@
     {
       "id": "pick",
       "branch": [
-        {"when": "questOffered", "id": 183, "then": "q183"},
-        {"when": "questOffered", "id": 176, "then": "q176"},
-        {"when": "questOffered", "id": 177, "then": "q177"},
-        {"when": "questOffered", "id": 178, "then": "q178"},
-        {"when": "questOffered", "id": 179, "then": "q179"},
-        {"when": "questOffered", "id": 180, "then": "q180"},
+        {"when": "questInHand", "id": 183, "then": "q183"},
+        {"when": "questInHand", "id": 176, "then": "q176"},
+        {"when": "questInHand", "id": 177, "then": "q177"},
+        {"when": "questInHand", "id": 178, "then": "q178"},
+        {"when": "questInHand", "id": 179, "then": "q179"},
+        {"when": "questInHand", "id": 180, "then": "q180"},
+        {"when": "questInHand", "id": 196, "then": "q196"},
+        {"when": "questInHand", "id": 6216, "then": "q6216"},
+
+        {"when": "questOffered", "id": 6216, "then": "q6216"},
         {"when": "questOffered", "id": 196, "then": "q196"},
-        {"when": "questOffered", "id": 6216, "then": "q6216"}
+        {"when": "questOffered", "id": 180, "then": "q180"},
+        {"when": "questOffered", "id": 179, "then": "q179"},
+        {"when": "questOffered", "id": 178, "then": "q178"},
+        {"when": "questOffered", "id": 177, "then": "q177"},
+        {"when": "questOffered", "id": 176, "then": "q176"},
+        {"when": "questOffered", "id": 183, "then": "q183"}
       ],
       "else": "done"
     },
@@ -47,7 +56,7 @@
       ],
       "wait": [
         {"when": "here", "map": "portalundead", "cell": "Enter"},
-        {"when": "questActive", "id": 183}
+        {"when": "questInHand", "id": 183}
       ],
       "timeout": 30,
       "retry": 3,
@@ -82,7 +91,7 @@
       ],
       "wait": [
         {"when": "here", "map": "swordhavenundead", "cell": "Enter"},
-        {"when": "questActive", "id": 176}
+        {"when": "questInHand", "id": 176}
       ],
       "timeout": 30,
       "retry": 3,
@@ -117,7 +126,7 @@
       ],
       "wait": [
         {"when": "here", "map": "swordhavenundead", "cell": "Extra1"},
-        {"when": "questActive", "id": 177}
+        {"when": "questInHand", "id": 177}
       ],
       "timeout": 30,
       "retry": 3,
@@ -152,7 +161,7 @@
       ],
       "wait": [
         {"when": "here", "map": "swordhavenundead", "cell": "Gates"},
-        {"when": "questActive", "id": 178}
+        {"when": "questInHand", "id": 178}
       ],
       "timeout": 30,
       "retry": 3,
@@ -187,7 +196,7 @@
       ],
       "wait": [
         {"when": "here", "map": "castleundead", "cell": "Enter"},
-        {"when": "questActive", "id": 179}
+        {"when": "questInHand", "id": 179}
       ],
       "timeout": 30,
       "retry": 3,
@@ -222,7 +231,7 @@
       ],
       "wait": [
         {"when": "here", "map": "castleundead", "cell": "Enter"},
-        {"when": "questActive", "id": 180}
+        {"when": "questInHand", "id": 180}
       ],
       "timeout": 30,
       "retry": 3,
@@ -257,7 +266,7 @@
       ],
       "wait": [
         {"when": "here", "map": "chaoscrypt", "cell": "Boss2"},
-        {"when": "questActive", "id": 196}
+        {"when": "questInHand", "id": 196}
       ],
       "timeout": 30,
       "retry": 3,
@@ -292,7 +301,7 @@
       ],
       "wait": [
         {"when": "here", "map": "prison", "cell": "Open"},
-        {"when": "questActive", "id": 6216}
+        {"when": "questInHand", "id": 6216}
       ],
       "timeout": 30,
       "retry": 3,
