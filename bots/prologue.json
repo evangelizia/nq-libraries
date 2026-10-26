@@ -14,7 +14,7 @@
     {
       "id": "route",
       "do": [{"act": "quests", "ids": [183, 176, 177, 178, 179, 180, 196, 6216]}],
-      "wait": [{"when": "elapsed", "value": 2}],
+      "wait": [{"when": "elapsed", "value": 3}],
       "timeout": 30,
       "retry": 3,
       "then": "pick"
