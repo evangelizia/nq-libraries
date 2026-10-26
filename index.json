@@ -11,6 +11,16 @@
       ],
       "file": "class/lightcaster.json",
       "sha256": "57113c7ab56a3db2b52eb9bcc01bc5148287aa35d71bd09161b30e426a75ff3f"
+    },
+    {
+      "id": "mage",
+      "class": "Mage",
+      "role": "starter caster",
+      "aliases": [
+        "Mage Class"
+      ],
+      "file": "class/mage.json",
+      "sha256": "43b8db90af7f81de6a2882a400501eca20b092c49a8573aed31c18873f3b2078"
     }
   ],
   "bots": [

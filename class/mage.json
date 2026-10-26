@@ -1,0 +1,13 @@
+{
+  "id": "mage",
+  "class": "Mage",
+  "aliases": ["Mage Class"],
+  "role": "starter caster",
+  "notes": "The order is the combo: Fireball leaves Scorched, Explosion consumes it for the delayed detonation, and Ice Shard can only apply Frozen Blood once Scorched is gone. The next Fireball then eats Frozen Blood for double damage. Arcane Shield costs no mana, so it is kept up as a rule instead of taking a rotation slot.",
+  "rotation": ["Fireball", "Explosion", "Ice Shard"],
+  "rules": [
+    {"when": "hpBelow", "value": 35, "action": "Potion"},
+    {"when": "mpBelow", "value": 25, "action": "Potion"},
+    {"when": "missingAura", "aura": "Arcane Shield", "action": "Arcane Shield"}
+  ]
+}
