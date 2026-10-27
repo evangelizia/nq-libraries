@@ -102,7 +102,11 @@ VERBS = [
     ("aggro", "none", "Pull every monster in the cell through the game's own "
                       "aggroMons, so no monster id is written down."),
     ("fight", "none", "Hand combat to the engine; it picks targets and casts."),
-    ("stopFight", "none", "Stop attacking, and drop the target."),
+    ("stopFight", "leave?", "Stop attacking and drop the target. Then, when a "
+                            "monster still holds the character, re-enter the room "
+                            "to clear it, because the attack stopping does not "
+                            "clear the monster. `leave:false` keeps the room: a "
+                            "route that means to go back into the same fight."),
     ("rest", "none", "Sit down until the client's own rest finishes."),
     ("heal", "none", "Use the heal skill if the class has one."),
     ("equip", "item, safe", "Wear an item by name. safe:false ends the run when "
