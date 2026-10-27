@@ -385,7 +385,7 @@
       "id": "q6216-piles",
       "do": [
         {"act": "stopFight"},
-        {"act": "mapItem", "id": 62209}
+        {"act": "mapItem", "id": 39}
       ],
       "wait": [{"when": "tempAtLeast", "item": "Pile of Gold", "value": 5}],
       "timeout": 6,
