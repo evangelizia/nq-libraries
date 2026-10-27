@@ -1,0 +1,1653 @@
+{
+  "schema": 1,
+  "id": "chaos2",
+  "name": "2nd Chaos Lord · Mirror Portal",
+  "bundle": false,
+  "once": true,
+  "notes": "The whole 2nd Chaos Lord line in one run: the mirror chains in /battleoff, /brightfall and /overworld, then Bardolph's seven in /reddeath, then the three ingredients of the Shriekward Potion and the two beasts in /mirrorportal. It is a one-pass route (`once`), so a quest this character has handed in is remembered and never taken again, and the run stops itself once nothing is left; each pass works on whatever is already in hand, otherwise the next quest of the chain the server actually offers, so a restart picks up where the character is. Nine of the 38 are not fights: 2909, 2910, 2915, 2916, 2923, 2927, 2931, 3168 and 3183 are map items, clicked by the id the map's own sparkle sends, on a loop until the quest asks for nothing. Those stop combat and stand on the Blank cell first, except 3183, which clicks from the town's spawn cell: a click is a packet and does not need the sparkle in sight. 2918 is a talk: it is ready the moment the character walks into /overworld, so its step waits for that rather than for a fight. 3167 wants five Boneweed before it wants its two incenses, so it farms first and clicks after, in one step pair. 3184, 3185 and 3186 are the three ingredients, and each pays its counter by chance, so the route takes the quest again until the counter lands instead of handing in a potion it cannot make; 3187 is the turn-in that wants all three, so it is accepted first and its check step sends the character to whichever counter is still missing, which is the order the reference bot runs them in. 3188 needs the potion worn, so its step equips it and only warns when the bag has none. A fight step hands over the moment the quest reads complete rather than finishing the mob, and every turn-in stops combat first, so a finished quest never keeps the boss angry. Loot is claimed as it falls (`pickup`): these quests pay real drops with names a route cannot list ahead of time. 3173 and 3174 are side quests the line does not need.",
+  "pickup": true,
+  "combat": {"target": "nearest", "rest": 60},
+  "stop": [
+    {"when": "bagFreeBelow", "value": 2, "say": "bag almost full"},
+    {"when": "runFor", "value": 21600, "say": "six hours on this route"}
+  ],
+  "start": "route",
+  "steps": [
+    {
+      "id": "route",
+      "do": [
+        {"act": "stopFight"},
+        {"act": "quests", "ids": [2909, 2910, 2911, 2912, 2913, 2914, 2915, 2916, 2917, 2918, 2919, 2920, 2921, 2922, 2923, 2924, 2925, 2926, 2927, 2928, 2929, 2930, 2931, 2932, 3166, 3167, 3168, 3169, 3170, 3171, 3172, 3183, 3187, 3184, 3185, 3186, 3188, 3189]}
+      ],
+      "wait": [{"when": "elapsed", "value": 3}],
+      "timeout": 30,
+      "retry": 3,
+      "then": "pick"
+    },
+    {
+      "id": "pick",
+      "branch": [
+        {"when": "questInHand", "id": 2909, "then": "q2909"},
+        {"when": "questInHand", "id": 2910, "then": "q2910"},
+        {"when": "questInHand", "id": 2911, "then": "q2911"},
+        {"when": "questInHand", "id": 2912, "then": "q2912"},
+        {"when": "questInHand", "id": 2913, "then": "q2913"},
+        {"when": "questInHand", "id": 2914, "then": "q2914"},
+        {"when": "questInHand", "id": 2915, "then": "q2915"},
+        {"when": "questInHand", "id": 2916, "then": "q2916"},
+        {"when": "questInHand", "id": 2917, "then": "q2917"},
+        {"when": "questInHand", "id": 2918, "then": "q2918"},
+        {"when": "questInHand", "id": 2919, "then": "q2919"},
+        {"when": "questInHand", "id": 2920, "then": "q2920"},
+        {"when": "questInHand", "id": 2921, "then": "q2921"},
+        {"when": "questInHand", "id": 2922, "then": "q2922"},
+        {"when": "questInHand", "id": 2923, "then": "q2923"},
+        {"when": "questInHand", "id": 2924, "then": "q2924"},
+        {"when": "questInHand", "id": 2925, "then": "q2925"},
+        {"when": "questInHand", "id": 2926, "then": "q2926"},
+        {"when": "questInHand", "id": 2927, "then": "q2927"},
+        {"when": "questInHand", "id": 2928, "then": "q2928"},
+        {"when": "questInHand", "id": 2929, "then": "q2929"},
+        {"when": "questInHand", "id": 2930, "then": "q2930"},
+        {"when": "questInHand", "id": 2931, "then": "q2931"},
+        {"when": "questInHand", "id": 2932, "then": "q2932"},
+        {"when": "questInHand", "id": 3166, "then": "q3166"},
+        {"when": "questInHand", "id": 3167, "then": "q3167"},
+        {"when": "questInHand", "id": 3168, "then": "q3168"},
+        {"when": "questInHand", "id": 3169, "then": "q3169"},
+        {"when": "questInHand", "id": 3170, "then": "q3170"},
+        {"when": "questInHand", "id": 3171, "then": "q3171"},
+        {"when": "questInHand", "id": 3172, "then": "q3172"},
+        {"when": "questInHand", "id": 3183, "then": "q3183"},
+        {"when": "questInHand", "id": 3187, "then": "q3187"},
+        {"when": "questInHand", "id": 3184, "then": "q3184"},
+        {"when": "questInHand", "id": 3185, "then": "q3185"},
+        {"when": "questInHand", "id": 3186, "then": "q3186"},
+        {"when": "questInHand", "id": 3188, "then": "q3188"},
+        {"when": "questInHand", "id": 3189, "then": "q3189"},
+
+        {"when": "questOffered", "id": 2909, "then": "q2909"},
+        {"when": "questOffered", "id": 2910, "then": "q2910"},
+        {"when": "questOffered", "id": 2911, "then": "q2911"},
+        {"when": "questOffered", "id": 2912, "then": "q2912"},
+        {"when": "questOffered", "id": 2913, "then": "q2913"},
+        {"when": "questOffered", "id": 2914, "then": "q2914"},
+        {"when": "questOffered", "id": 2915, "then": "q2915"},
+        {"when": "questOffered", "id": 2916, "then": "q2916"},
+        {"when": "questOffered", "id": 2917, "then": "q2917"},
+        {"when": "questOffered", "id": 2918, "then": "q2918"},
+        {"when": "questOffered", "id": 2919, "then": "q2919"},
+        {"when": "questOffered", "id": 2920, "then": "q2920"},
+        {"when": "questOffered", "id": 2921, "then": "q2921"},
+        {"when": "questOffered", "id": 2922, "then": "q2922"},
+        {"when": "questOffered", "id": 2923, "then": "q2923"},
+        {"when": "questOffered", "id": 2924, "then": "q2924"},
+        {"when": "questOffered", "id": 2925, "then": "q2925"},
+        {"when": "questOffered", "id": 2926, "then": "q2926"},
+        {"when": "questOffered", "id": 2927, "then": "q2927"},
+        {"when": "questOffered", "id": 2928, "then": "q2928"},
+        {"when": "questOffered", "id": 2929, "then": "q2929"},
+        {"when": "questOffered", "id": 2930, "then": "q2930"},
+        {"when": "questOffered", "id": 2931, "then": "q2931"},
+        {"when": "questOffered", "id": 2932, "then": "q2932"},
+        {"when": "questOffered", "id": 3166, "then": "q3166"},
+        {"when": "questOffered", "id": 3167, "then": "q3167"},
+        {"when": "questOffered", "id": 3168, "then": "q3168"},
+        {"when": "questOffered", "id": 3169, "then": "q3169"},
+        {"when": "questOffered", "id": 3170, "then": "q3170"},
+        {"when": "questOffered", "id": 3171, "then": "q3171"},
+        {"when": "questOffered", "id": 3172, "then": "q3172"},
+        {"when": "questOffered", "id": 3183, "then": "q3183"},
+        {"when": "questOffered", "id": 3187, "then": "q3187"},
+        {"when": "questOffered", "id": 3184, "then": "q3184"},
+        {"when": "questOffered", "id": 3185, "then": "q3185"},
+        {"when": "questOffered", "id": 3186, "then": "q3186"},
+        {"when": "questOffered", "id": 3188, "then": "q3188"},
+        {"when": "questOffered", "id": 3189, "then": "q3189"}
+      ],
+      "else": "done"
+    },
+    {
+      "id": "done",
+      "do": [{"act": "stop", "msg": "2nd Chaos Lord complete: nothing left to accept"}]
+    },
+    {
+      "id": "q2909",
+      "branch": [{"when": "questComplete", "id": 2909, "then": "q2909-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 2909},
+        {"act": "join", "map": "battleoff", "cell": "Enter", "pad": "Spawn"}
+      ],
+      "wait": [
+        {"when": "here", "map": "battleoff", "cell": "Enter"},
+        {"when": "questInHand", "id": 2909}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q2909-move"
+    },
+    {
+      "id": "q2909-move",
+      "do": [{"act": "moveTo", "cell": "Blank", "pad": "Bloom"}],
+      "wait": [{"when": "here", "map": "battleoff", "cell": "Blank"}],
+      "timeout": 20,
+      "retry": 3,
+      "then": "q2909-click"
+    },
+    {
+      "id": "q2909-click",
+      "branch": [{"when": "questComplete", "id": 2909, "then": "q2909-send"}],
+      "do": [{"act": "stopFight"}, {"act": "mapItem", "id": 1779}],
+      "wait": [{"when": "questComplete", "id": 2909}],
+      "timeout": 3,
+      "retry": 60,
+      "then": "q2909-send"
+    },
+    {
+      "id": "q2909-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 2909}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 2909}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q2910",
+      "branch": [{"when": "questComplete", "id": 2910, "then": "q2910-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 2910},
+        {"act": "join", "map": "battleoff", "cell": "Enter", "pad": "Spawn"}
+      ],
+      "wait": [
+        {"when": "here", "map": "battleoff", "cell": "Enter"},
+        {"when": "questInHand", "id": 2910}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q2910-move"
+    },
+    {
+      "id": "q2910-move",
+      "do": [{"act": "moveTo", "cell": "Blank", "pad": "Bloom"}],
+      "wait": [{"when": "here", "map": "battleoff", "cell": "Blank"}],
+      "timeout": 20,
+      "retry": 3,
+      "then": "q2910-click"
+    },
+    {
+      "id": "q2910-click",
+      "branch": [{"when": "questComplete", "id": 2910, "then": "q2910-send"}],
+      "do": [{"act": "stopFight"}, {"act": "mapItem", "id": 1780}],
+      "wait": [{"when": "questComplete", "id": 2910}],
+      "timeout": 3,
+      "retry": 60,
+      "then": "q2910-send"
+    },
+    {
+      "id": "q2910-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 2910}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 2910}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q2911",
+      "branch": [{"when": "questComplete", "id": 2911, "then": "q2911-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 2911},
+        {"act": "join", "map": "battleoff", "cell": "r7", "pad": "Right"}
+      ],
+      "wait": [
+        {"when": "here", "map": "battleoff", "cell": "r7"},
+        {"when": "questInHand", "id": 2911}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q2911-farm"
+    },
+    {
+      "id": "q2911-farm",
+      "branch": [{"when": "questComplete", "id": 2911, "then": "q2911-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 2911},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q2911-farm"
+    },
+    {
+      "id": "q2911-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 2911}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 2911}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q2912",
+      "branch": [{"when": "questComplete", "id": 2912, "then": "q2912-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 2912},
+        {"act": "join", "map": "battleoff", "cell": "r7", "pad": "Right"}
+      ],
+      "wait": [
+        {"when": "here", "map": "battleoff", "cell": "r7"},
+        {"when": "questInHand", "id": 2912}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q2912-farm"
+    },
+    {
+      "id": "q2912-farm",
+      "branch": [{"when": "questComplete", "id": 2912, "then": "q2912-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 2912},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q2912-farm"
+    },
+    {
+      "id": "q2912-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 2912}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 2912}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q2913",
+      "branch": [{"when": "questComplete", "id": 2913, "then": "q2913-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 2913},
+        {"act": "join", "map": "brightfall", "cell": "r4", "pad": "Left"}
+      ],
+      "wait": [
+        {"when": "here", "map": "brightfall", "cell": "r4"},
+        {"when": "questInHand", "id": 2913}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q2913-farm"
+    },
+    {
+      "id": "q2913-farm",
+      "branch": [{"when": "questComplete", "id": 2913, "then": "q2913-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 2913},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q2913-farm"
+    },
+    {
+      "id": "q2913-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 2913}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 2913}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q2914",
+      "branch": [{"when": "questComplete", "id": 2914, "then": "q2914-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 2914},
+        {"act": "join", "map": "brightfall", "cell": "r1", "pad": "Left"}
+      ],
+      "wait": [
+        {"when": "here", "map": "brightfall", "cell": "r1"},
+        {"when": "questInHand", "id": 2914}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q2914-farm"
+    },
+    {
+      "id": "q2914-farm",
+      "branch": [{"when": "questComplete", "id": 2914, "then": "q2914-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 2914},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q2914-farm"
+    },
+    {
+      "id": "q2914-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 2914}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 2914}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q2915",
+      "branch": [{"when": "questComplete", "id": 2915, "then": "q2915-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 2915},
+        {"act": "join", "map": "brightfall", "cell": "Enter", "pad": "Spawn"}
+      ],
+      "wait": [
+        {"when": "here", "map": "brightfall", "cell": "Enter"},
+        {"when": "questInHand", "id": 2915}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q2915-move"
+    },
+    {
+      "id": "q2915-move",
+      "do": [{"act": "moveTo", "cell": "Blank", "pad": "Bloom"}],
+      "wait": [{"when": "here", "map": "brightfall", "cell": "Blank"}],
+      "timeout": 20,
+      "retry": 3,
+      "then": "q2915-click"
+    },
+    {
+      "id": "q2915-click",
+      "branch": [{"when": "questComplete", "id": 2915, "then": "q2915-send"}],
+      "do": [{"act": "stopFight"}, {"act": "mapItem", "id": 1781}],
+      "wait": [{"when": "questComplete", "id": 2915}],
+      "timeout": 3,
+      "retry": 60,
+      "then": "q2915-send"
+    },
+    {
+      "id": "q2915-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 2915}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 2915}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q2916",
+      "branch": [{"when": "questComplete", "id": 2916, "then": "q2916-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 2916},
+        {"act": "join", "map": "brightfall", "cell": "Enter", "pad": "Spawn"}
+      ],
+      "wait": [
+        {"when": "here", "map": "brightfall", "cell": "Enter"},
+        {"when": "questInHand", "id": 2916}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q2916-move"
+    },
+    {
+      "id": "q2916-move",
+      "do": [{"act": "moveTo", "cell": "Blank", "pad": "Bloom"}],
+      "wait": [{"when": "here", "map": "brightfall", "cell": "Blank"}],
+      "timeout": 20,
+      "retry": 3,
+      "then": "q2916-click"
+    },
+    {
+      "id": "q2916-click",
+      "branch": [{"when": "questComplete", "id": 2916, "then": "q2916-send"}],
+      "do": [{"act": "stopFight"}, {"act": "mapItem", "id": 1782}],
+      "wait": [{"when": "questComplete", "id": 2916}],
+      "timeout": 3,
+      "retry": 60,
+      "then": "q2916-send"
+    },
+    {
+      "id": "q2916-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 2916}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 2916}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q2917",
+      "branch": [{"when": "questComplete", "id": 2917, "then": "q2917-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 2917},
+        {"act": "join", "map": "brightfall", "cell": "r3", "pad": "Left"}
+      ],
+      "wait": [
+        {"when": "here", "map": "brightfall", "cell": "r3"},
+        {"when": "questInHand", "id": 2917}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q2917-farm"
+    },
+    {
+      "id": "q2917-farm",
+      "branch": [{"when": "questComplete", "id": 2917, "then": "q2917-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 2917},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q2917-farm"
+    },
+    {
+      "id": "q2917-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 2917}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 2917}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q2918",
+      "branch": [{"when": "questComplete", "id": 2918, "then": "q2918-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 2918},
+        {"act": "join", "map": "overworld", "cell": "Enter", "pad": "Spawn"}
+      ],
+      "wait": [
+        {"when": "here", "map": "overworld", "cell": "Enter"},
+        {"when": "questInHand", "id": 2918},
+        {"when": "questComplete", "id": 2918}
+      ],
+      "timeout": 90,
+      "retry": 3,
+      "then": "q2918-send"
+    },
+    {
+      "id": "q2918-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 2918}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 2918}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q2919",
+      "branch": [{"when": "questComplete", "id": 2919, "then": "q2919-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 2919},
+        {"act": "join", "map": "overworld", "cell": "Enter", "pad": "Spawn"}
+      ],
+      "wait": [
+        {"when": "here", "map": "overworld", "cell": "Enter"},
+        {"when": "questInHand", "id": 2919}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q2919-farm"
+    },
+    {
+      "id": "q2919-farm",
+      "branch": [{"when": "questComplete", "id": 2919, "then": "q2919-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 2919},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q2919-farm"
+    },
+    {
+      "id": "q2919-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 2919}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 2919}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q2920",
+      "branch": [{"when": "questComplete", "id": 2920, "then": "q2920-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 2920},
+        {"act": "join", "map": "overworld", "cell": "Enter", "pad": "Spawn"}
+      ],
+      "wait": [
+        {"when": "here", "map": "overworld", "cell": "Enter"},
+        {"when": "questInHand", "id": 2920}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q2920-farm"
+    },
+    {
+      "id": "q2920-farm",
+      "branch": [{"when": "questComplete", "id": 2920, "then": "q2920-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 2920},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q2920-farm"
+    },
+    {
+      "id": "q2920-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 2920}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 2920}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q2921",
+      "branch": [{"when": "questComplete", "id": 2921, "then": "q2921-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 2921},
+        {"act": "join", "map": "overworld", "cell": "Enter", "pad": "Spawn"}
+      ],
+      "wait": [
+        {"when": "here", "map": "overworld", "cell": "Enter"},
+        {"when": "questInHand", "id": 2921}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q2921-farm"
+    },
+    {
+      "id": "q2921-farm",
+      "branch": [{"when": "questComplete", "id": 2921, "then": "q2921-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 2921},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q2921-farm"
+    },
+    {
+      "id": "q2921-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 2921}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 2921}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q2922",
+      "branch": [{"when": "questComplete", "id": 2922, "then": "q2922-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 2922},
+        {"act": "join", "map": "overworld", "cell": "r2", "pad": "Up"}
+      ],
+      "wait": [
+        {"when": "here", "map": "overworld", "cell": "r2"},
+        {"when": "questInHand", "id": 2922}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q2922-farm"
+    },
+    {
+      "id": "q2922-farm",
+      "branch": [{"when": "questComplete", "id": 2922, "then": "q2922-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 2922},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q2922-farm"
+    },
+    {
+      "id": "q2922-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 2922}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 2922}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q2923",
+      "branch": [{"when": "questComplete", "id": 2923, "then": "q2923-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 2923},
+        {"act": "join", "map": "overworld", "cell": "Enter", "pad": "Spawn"}
+      ],
+      "wait": [
+        {"when": "here", "map": "overworld", "cell": "Enter"},
+        {"when": "questInHand", "id": 2923}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q2923-move"
+    },
+    {
+      "id": "q2923-move",
+      "do": [{"act": "moveTo", "cell": "Blank", "pad": "Bloom"}],
+      "wait": [{"when": "here", "map": "overworld", "cell": "Blank"}],
+      "timeout": 20,
+      "retry": 3,
+      "then": "q2923-click"
+    },
+    {
+      "id": "q2923-click",
+      "branch": [{"when": "questComplete", "id": 2923, "then": "q2923-send"}],
+      "do": [{"act": "stopFight"}, {"act": "mapItem", "id": 1800}],
+      "wait": [{"when": "questComplete", "id": 2923}],
+      "timeout": 3,
+      "retry": 60,
+      "then": "q2923-send"
+    },
+    {
+      "id": "q2923-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 2923}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 2923}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q2924",
+      "branch": [{"when": "questComplete", "id": 2924, "then": "q2924-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 2924},
+        {"act": "join", "map": "overworld", "cell": "r6", "pad": "Left"}
+      ],
+      "wait": [
+        {"when": "here", "map": "overworld", "cell": "r6"},
+        {"when": "questInHand", "id": 2924}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q2924-farm"
+    },
+    {
+      "id": "q2924-farm",
+      "branch": [{"when": "questComplete", "id": 2924, "then": "q2924-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 2924},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q2924-farm"
+    },
+    {
+      "id": "q2924-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 2924}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 2924}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q2925",
+      "branch": [{"when": "questComplete", "id": 2925, "then": "q2925-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 2925},
+        {"act": "join", "map": "overworld", "cell": "r6", "pad": "Left"}
+      ],
+      "wait": [
+        {"when": "here", "map": "overworld", "cell": "r6"},
+        {"when": "questInHand", "id": 2925}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q2925-farm"
+    },
+    {
+      "id": "q2925-farm",
+      "branch": [{"when": "questComplete", "id": 2925, "then": "q2925-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 2925},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q2925-farm"
+    },
+    {
+      "id": "q2925-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 2925}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 2925}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q2926",
+      "branch": [{"when": "questComplete", "id": 2926, "then": "q2926-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 2926},
+        {"act": "join", "map": "overworld", "cell": "r6", "pad": "Left"}
+      ],
+      "wait": [
+        {"when": "here", "map": "overworld", "cell": "r6"},
+        {"when": "questInHand", "id": 2926}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q2926-farm"
+    },
+    {
+      "id": "q2926-farm",
+      "branch": [{"when": "questComplete", "id": 2926, "then": "q2926-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 2926},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q2926-farm"
+    },
+    {
+      "id": "q2926-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 2926}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 2926}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q2927",
+      "branch": [{"when": "questComplete", "id": 2927, "then": "q2927-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 2927},
+        {"act": "join", "map": "overworld", "cell": "Enter", "pad": "Spawn"}
+      ],
+      "wait": [
+        {"when": "here", "map": "overworld", "cell": "Enter"},
+        {"when": "questInHand", "id": 2927}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q2927-move"
+    },
+    {
+      "id": "q2927-move",
+      "do": [{"act": "moveTo", "cell": "Blank", "pad": "Bloom"}],
+      "wait": [{"when": "here", "map": "overworld", "cell": "Blank"}],
+      "timeout": 20,
+      "retry": 3,
+      "then": "q2927-click"
+    },
+    {
+      "id": "q2927-click",
+      "branch": [{"when": "questComplete", "id": 2927, "then": "q2927-send"}],
+      "do": [{"act": "stopFight"}, {"act": "mapItem", "id": 1801}],
+      "wait": [{"when": "questComplete", "id": 2927}],
+      "timeout": 3,
+      "retry": 60,
+      "then": "q2927-send"
+    },
+    {
+      "id": "q2927-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 2927}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 2927}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q2928",
+      "branch": [{"when": "questComplete", "id": 2928, "then": "q2928-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 2928},
+        {"act": "join", "map": "overworld", "cell": "Enter", "pad": "Spawn"}
+      ],
+      "wait": [
+        {"when": "here", "map": "overworld", "cell": "Enter"},
+        {"when": "questInHand", "id": 2928}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q2928-farm"
+    },
+    {
+      "id": "q2928-farm",
+      "branch": [{"when": "questComplete", "id": 2928, "then": "q2928-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 2928},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q2928-farm"
+    },
+    {
+      "id": "q2928-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 2928}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 2928}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q2929",
+      "branch": [{"when": "questComplete", "id": 2929, "then": "q2929-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 2929},
+        {"act": "join", "map": "overworld", "cell": "Enter", "pad": "Spawn"}
+      ],
+      "wait": [
+        {"when": "here", "map": "overworld", "cell": "Enter"},
+        {"when": "questInHand", "id": 2929}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q2929-farm"
+    },
+    {
+      "id": "q2929-farm",
+      "branch": [{"when": "questComplete", "id": 2929, "then": "q2929-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 2929},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q2929-farm"
+    },
+    {
+      "id": "q2929-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 2929}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 2929}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q2930",
+      "branch": [{"when": "questComplete", "id": 2930, "then": "q2930-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 2930},
+        {"act": "join", "map": "overworld", "cell": "Enter", "pad": "Spawn"}
+      ],
+      "wait": [
+        {"when": "here", "map": "overworld", "cell": "Enter"},
+        {"when": "questInHand", "id": 2930}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q2930-farm"
+    },
+    {
+      "id": "q2930-farm",
+      "branch": [{"when": "questComplete", "id": 2930, "then": "q2930-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 2930},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q2930-farm"
+    },
+    {
+      "id": "q2930-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 2930}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 2930}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q2931",
+      "branch": [{"when": "questComplete", "id": 2931, "then": "q2931-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 2931},
+        {"act": "join", "map": "overworld", "cell": "Enter", "pad": "Spawn"}
+      ],
+      "wait": [
+        {"when": "here", "map": "overworld", "cell": "Enter"},
+        {"when": "questInHand", "id": 2931}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q2931-move"
+    },
+    {
+      "id": "q2931-move",
+      "do": [{"act": "moveTo", "cell": "Blank", "pad": "Bloom"}],
+      "wait": [{"when": "here", "map": "overworld", "cell": "Blank"}],
+      "timeout": 20,
+      "retry": 3,
+      "then": "q2931-click"
+    },
+    {
+      "id": "q2931-click",
+      "branch": [{"when": "questComplete", "id": 2931, "then": "q2931-send"}],
+      "do": [{"act": "stopFight"}, {"act": "mapItem", "id": 1802}],
+      "wait": [{"when": "questComplete", "id": 2931}],
+      "timeout": 3,
+      "retry": 60,
+      "then": "q2931-send"
+    },
+    {
+      "id": "q2931-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 2931}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 2931}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q2932",
+      "branch": [{"when": "questComplete", "id": 2932, "then": "q2932-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 2932},
+        {"act": "join", "map": "overworld", "cell": "boss1", "pad": "Left"}
+      ],
+      "wait": [
+        {"when": "here", "map": "overworld", "cell": "boss1"},
+        {"when": "questInHand", "id": 2932}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q2932-farm"
+    },
+    {
+      "id": "q2932-farm",
+      "branch": [{"when": "questComplete", "id": 2932, "then": "q2932-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 2932},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q2932-farm"
+    },
+    {
+      "id": "q2932-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 2932}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 2932}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q3166",
+      "branch": [{"when": "questComplete", "id": 3166, "then": "q3166-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 3166},
+        {"act": "join", "map": "reddeath", "cell": "r2", "pad": "Left"}
+      ],
+      "wait": [
+        {"when": "here", "map": "reddeath", "cell": "r2"},
+        {"when": "questInHand", "id": 3166}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q3166-farm"
+    },
+    {
+      "id": "q3166-farm",
+      "branch": [{"when": "questComplete", "id": 3166, "then": "q3166-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 3166},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q3166-farm"
+    },
+    {
+      "id": "q3166-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 3166}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 3166}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q3167",
+      "branch": [{"when": "questComplete", "id": 3167, "then": "q3167-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 3167},
+        {"act": "join", "map": "reddeath", "cell": "r3", "pad": "Left"}
+      ],
+      "wait": [
+        {"when": "here", "map": "reddeath", "cell": "r3"},
+        {"when": "questInHand", "id": 3167}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q3167-farm"
+    },
+    {
+      "id": "q3167-farm",
+      "branch": [
+        {"when": "questComplete", "id": 3167, "then": "q3167-send"},
+        {"when": "tempAtLeast", "item": "Boneweed", "value": 5, "then": "q3167-a"}
+      ],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 3167},
+          {"when": "tempAtLeast", "item": "Boneweed", "value": 5},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q3167-farm"
+    },
+    {
+      "id": "q3167-a",
+      "branch": [{"when": "questComplete", "id": 3167, "then": "q3167-send"}],
+      "do": [{"act": "stopFight"}, {"act": "mapItem", "id": 2178}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 3167},
+          {"when": "elapsed", "value": 3}
+        ]}
+      ],
+      "then": "q3167-b"
+    },
+    {
+      "id": "q3167-b",
+      "branch": [{"when": "questComplete", "id": 3167, "then": "q3167-send"}],
+      "do": [{"act": "stopFight"}, {"act": "mapItem", "id": 2179}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 3167},
+          {"when": "elapsed", "value": 3}
+        ]}
+      ],
+      "then": "q3167-a"
+    },
+    {
+      "id": "q3167-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 3167}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 3167}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q3168",
+      "branch": [{"when": "questComplete", "id": 3168, "then": "q3168-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 3168},
+        {"act": "join", "map": "reddeath", "cell": "Enter", "pad": "Spawn"}
+      ],
+      "wait": [
+        {"when": "here", "map": "reddeath", "cell": "Enter"},
+        {"when": "questInHand", "id": 3168}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q3168-move"
+    },
+    {
+      "id": "q3168-move",
+      "do": [{"act": "moveTo", "cell": "Blank", "pad": "Bloom"}],
+      "wait": [{"when": "here", "map": "reddeath", "cell": "Blank"}],
+      "timeout": 20,
+      "retry": 3,
+      "then": "q3168-click"
+    },
+    {
+      "id": "q3168-click",
+      "branch": [{"when": "questComplete", "id": 3168, "then": "q3168-send"}],
+      "do": [{"act": "stopFight"}, {"act": "mapItem", "id": 2180}],
+      "wait": [{"when": "questComplete", "id": 3168}],
+      "timeout": 3,
+      "retry": 60,
+      "then": "q3168-send"
+    },
+    {
+      "id": "q3168-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 3168}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 3168}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q3169",
+      "branch": [{"when": "questComplete", "id": 3169, "then": "q3169-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 3169},
+        {"act": "join", "map": "reddeath", "cell": "r7", "pad": "Down"}
+      ],
+      "wait": [
+        {"when": "here", "map": "reddeath", "cell": "r7"},
+        {"when": "questInHand", "id": 3169}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q3169-farm"
+    },
+    {
+      "id": "q3169-farm",
+      "branch": [{"when": "questComplete", "id": 3169, "then": "q3169-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 3169},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q3169-farm"
+    },
+    {
+      "id": "q3169-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 3169}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 3169}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q3170",
+      "branch": [{"when": "questComplete", "id": 3170, "then": "q3170-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 3170},
+        {"act": "join", "map": "reddeath", "cell": "r7", "pad": "Down"}
+      ],
+      "wait": [
+        {"when": "here", "map": "reddeath", "cell": "r7"},
+        {"when": "questInHand", "id": 3170}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q3170-farm"
+    },
+    {
+      "id": "q3170-farm",
+      "branch": [{"when": "questComplete", "id": 3170, "then": "q3170-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 3170},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q3170-farm"
+    },
+    {
+      "id": "q3170-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 3170}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 3170}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q3171",
+      "branch": [{"when": "questComplete", "id": 3171, "then": "q3171-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 3171},
+        {"act": "join", "map": "reddeath", "cell": "r5", "pad": "Right"}
+      ],
+      "wait": [
+        {"when": "here", "map": "reddeath", "cell": "r5"},
+        {"when": "questInHand", "id": 3171}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q3171-farm"
+    },
+    {
+      "id": "q3171-farm",
+      "branch": [{"when": "questComplete", "id": 3171, "then": "q3171-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 3171},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q3171-farm"
+    },
+    {
+      "id": "q3171-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 3171}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 3171}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q3172",
+      "branch": [{"when": "questComplete", "id": 3172, "then": "q3172-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 3172},
+        {"act": "join", "map": "reddeath", "cell": "r5", "pad": "Right"}
+      ],
+      "wait": [
+        {"when": "here", "map": "reddeath", "cell": "r5"},
+        {"when": "questInHand", "id": 3172}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q3172-farm"
+    },
+    {
+      "id": "q3172-farm",
+      "branch": [{"when": "questComplete", "id": 3172, "then": "q3172-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 3172},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q3172-farm"
+    },
+    {
+      "id": "q3172-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 3172}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 3172}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q3183",
+      "branch": [{"when": "questComplete", "id": 3183, "then": "q3183-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 3183},
+        {"act": "join", "map": "battleontown", "cell": "Enter", "pad": "Spawn"}
+      ],
+      "wait": [
+        {"when": "here", "map": "battleontown", "cell": "Enter"},
+        {"when": "questInHand", "id": 3183}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q3183-click"
+    },
+    {
+      "id": "q3183-click",
+      "branch": [{"when": "questComplete", "id": 3183, "then": "q3183-send"}],
+      "do": [{"act": "stopFight"}, {"act": "mapItem", "id": 2203}],
+      "wait": [{"when": "questComplete", "id": 3183}],
+      "timeout": 3,
+      "retry": 60,
+      "then": "q3183-send"
+    },
+    {
+      "id": "q3183-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 3183}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 3183}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q3187",
+      "branch": [
+        {"when": "questComplete", "id": 3187, "then": "q3187-send"},
+        {"when": "questInHand", "id": 3187, "then": "q3187-check"}
+      ],
+      "do": [{"act": "acceptQuest", "id": 3187}],
+      "wait": [{"when": "questInHand", "id": 3187}],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q3187-check"
+    },
+    {
+      "id": "q3187-check",
+      "branch": [
+        {"when": "questComplete", "id": 3187, "then": "q3187-send"},
+        {"when": "not", "of": {"when": "tempAtLeast", "item": "Perfect Prism", "value": 1}, "then": "q3184"},
+        {"when": "not", "of": {"when": "tempAtLeast", "item": "Unchaorrupted Sample", "value": 1}, "then": "q3185"},
+        {"when": "not", "of": {"when": "tempAtLeast", "item": "Harpy Feather", "value": 1}, "then": "q3186"}
+      ],
+      "else": "q3187-send"
+    },
+    {
+      "id": "q3187-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 3187}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 3187}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q3184",
+      "branch": [{"when": "questComplete", "id": 3184, "then": "q3184-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 3184},
+        {"act": "join", "map": "earthstorm", "cell": "r7", "pad": "Right"}
+      ],
+      "wait": [
+        {"when": "here", "map": "earthstorm", "cell": "r7"},
+        {"when": "questInHand", "id": 3184}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q3184-farm"
+    },
+    {
+      "id": "q3184-farm",
+      "branch": [{"when": "questComplete", "id": 3184, "then": "q3184-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 3184},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q3184-farm"
+    },
+    {
+      "id": "q3184-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 3184}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 3184}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "q3184-roll"
+    },
+    {
+      "id": "q3184-roll",
+      "branch": [{"when": "tempAtLeast", "item": "Perfect Prism", "value": 1, "then": "q3187"}],
+      "else": "q3184"
+    },
+    {
+      "id": "q3185",
+      "branch": [{"when": "questComplete", "id": 3185, "then": "q3185-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 3185},
+        {"act": "join", "map": "bloodtuskwar", "cell": "r10", "pad": "Down"}
+      ],
+      "wait": [
+        {"when": "here", "map": "bloodtuskwar", "cell": "r10"},
+        {"when": "questInHand", "id": 3185}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q3185-farm"
+    },
+    {
+      "id": "q3185-farm",
+      "branch": [{"when": "questComplete", "id": 3185, "then": "q3185-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 3185},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q3185-farm"
+    },
+    {
+      "id": "q3185-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 3185}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 3185}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "q3185-roll"
+    },
+    {
+      "id": "q3185-roll",
+      "branch": [
+        {"when": "tempAtLeast", "item": "Unchaorrupted Sample", "value": 1, "then": "q3187"}
+      ],
+      "else": "q3185"
+    },
+    {
+      "id": "q3186",
+      "branch": [{"when": "questComplete", "id": 3186, "then": "q3186-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 3186},
+        {"act": "join", "map": "bloodtuskwar", "cell": "r5", "pad": "Down"}
+      ],
+      "wait": [
+        {"when": "here", "map": "bloodtuskwar", "cell": "r5"},
+        {"when": "questInHand", "id": 3186}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q3186-farm"
+    },
+    {
+      "id": "q3186-farm",
+      "branch": [{"when": "questComplete", "id": 3186, "then": "q3186-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 3186},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q3186-farm"
+    },
+    {
+      "id": "q3186-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 3186}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 3186}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "q3186-roll"
+    },
+    {
+      "id": "q3186-roll",
+      "branch": [{"when": "tempAtLeast", "item": "Harpy Feather", "value": 1, "then": "q3187"}],
+      "else": "q3186"
+    },
+    {
+      "id": "q3188",
+      "branch": [{"when": "questComplete", "id": 3188, "then": "q3188-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 3188},
+        {"act": "equip", "item": "Shriekward Potion"},
+        {"act": "join", "map": "mirrorportal", "cell": "r3", "pad": "Left"}
+      ],
+      "wait": [
+        {"when": "here", "map": "mirrorportal", "cell": "r3"},
+        {"when": "questInHand", "id": 3188}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q3188-farm"
+    },
+    {
+      "id": "q3188-farm",
+      "branch": [{"when": "questComplete", "id": 3188, "then": "q3188-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 3188},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q3188-farm"
+    },
+    {
+      "id": "q3188-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 3188}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 3188}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    },
+    {
+      "id": "q3189",
+      "branch": [{"when": "questComplete", "id": 3189, "then": "q3189-send"}],
+      "do": [
+        {"act": "acceptQuest", "id": 3189},
+        {"act": "join", "map": "mirrorportal", "cell": "r4", "pad": "Left"}
+      ],
+      "wait": [
+        {"when": "here", "map": "mirrorportal", "cell": "r4"},
+        {"when": "questInHand", "id": 3189}
+      ],
+      "timeout": 30,
+      "retry": 3,
+      "then": "q3189-farm"
+    },
+    {
+      "id": "q3189-farm",
+      "branch": [{"when": "questComplete", "id": 3189, "then": "q3189-send"}],
+      "do": [{"act": "aggro"}, {"act": "fight"}],
+      "wait": [
+        {"when": "any", "of": [
+          {"when": "questComplete", "id": 3189},
+          {"when": "elapsed", "value": 15}
+        ]}
+      ],
+      "timeout": 0,
+      "then": "q3189-farm"
+    },
+    {
+      "id": "q3189-send",
+      "do": [{"act": "stopFight"}, {"act": "completeQuest", "id": 3189}],
+      "wait": [
+        {"when": "not", "of": {"when": "questComplete", "id": 3189}},
+        {"when": "elapsed", "value": 2}
+      ],
+      "timeout": 20,
+      "retry": 3,
+      "then": "route"
+    }
+  ]
+}
