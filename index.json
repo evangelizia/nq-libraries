@@ -35,6 +35,12 @@
   ],
   "bots": [
     {
+      "id": "chaos1",
+      "name": "1st Chaos Lord · Chiral Valley",
+      "file": "bots/chaos1.json",
+      "sha256": "ba859907b734b7e17dcd58fd537f5d89c597ab6197ba546be985a184dcc24c93"
+    },
+    {
       "id": "icestormarena",
       "name": "IceStormArena · XP / CP / gold",
       "file": "bots/icestormarena.json",
