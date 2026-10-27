@@ -32,8 +32,9 @@ ROUTES = TOOLS / "routes"
 BOTS = ROOT / "bots"
 DOCS = ROOT / "docs"
 
-FIGHT, MAP, MULTI = "fight", "map", "multi"
-KINDS = (FIGHT, MAP, MULTI)
+FIGHT, MAP, MULTI, TALK, MIX, META = ("fight", "map", "multi", "talk", "mix",
+                                      "meta")
+KINDS = (FIGHT, MAP, MULTI, TALK, MIX, META)
 
 GAP = object()
 
@@ -45,6 +46,16 @@ class Quest(NamedTuple):
     Blank cell first, where nothing can reach it, which is what a click wants
     when the cell it belongs to has mobs in it. Left as None, a click does that
     and a fight does not.
+
+    `drop` is the temp item and count a mix stops at before it clicks: a quest
+    that wants both counters is farmed for one and then clicked for the other.
+    `roll` is the temp item a fight has to keep taking the quest again for,
+    because the turn-in only pays it by chance. `needs` pairs the temp items a
+    meta turns in with the quest that pays each, and the step it generates sends
+    the character to whichever one is still missing. `gear` is worn on entry, for
+    a fight the game will not let a character win without it. `then` is where a
+    quest goes when it is done, for a group of quests that feed one turn-in: they
+    all report back to that turn-in instead of to the chain.
     """
 
     id: int
@@ -54,8 +65,15 @@ class Quest(NamedTuple):
     pad: str = "Spawn"
     items: tuple = ()
     blank: bool = None
+    drop: tuple = ()
+    roll: str = ""
+    needs: tuple = ()
+    gear: str = ""
+    then: str = ""
 
     def moves_to_blank(self):
+        if self.kind == MIX:
+            return False
         return (self.kind in (MAP, MULTI)) if self.blank is None else self.blank
 
 
@@ -289,68 +307,174 @@ def send_step(quest, then):
     }
 
 
-def quest_steps(quest, then):
+def quest_head(quest):
     qid = quest.id
-    after = {"fight": f"q{qid}-farm", "map": f"q{qid}-click",
-             "multi": f"q{qid}-a"}[quest.kind]
-    blank = quest.moves_to_blank()
-    if blank:
-        after = f"q{qid}-move"
+    accept = {"act": "acceptQuest", "id": qid}
+    join = {"act": "join", "map": quest.map, "cell": quest.cell, "pad": quest.pad}
+    where = [cond("here", map=quest.map, cell=quest.cell),
+             cond("questInHand", id=qid)]
+    wear = [{"act": "equip", "item": quest.gear}] if quest.gear else []
 
-    out = [{
+    # A meta turn-in has no place of its own: it wants counters the other quests
+    # pay, so the step only needs the quest in hand, and re-entering it is what
+    # sends the character on to whichever counter is still missing.
+    if quest.kind == META:
+        return {
+            "id": f"q{qid}",
+            "branch": [cond("questComplete", id=qid, then=f"q{qid}-send"),
+                       cond("questInHand", id=qid, then=f"q{qid}-check")],
+            "do": [accept],
+            "wait": [cond("questInHand", id=qid)],
+            "timeout": 30, "retry": 3, "then": f"q{qid}-check",
+        }
+
+    # A talk quest is ready when the character walks in, not when a fight ends.
+    if quest.kind == TALK:
+        return {
+            "id": f"q{qid}",
+            "branch": [cond("questComplete", id=qid, then=f"q{qid}-send")],
+            "do": [accept] + wear + [join],
+            "wait": where + [cond("questComplete", id=qid)],
+            "timeout": 90, "retry": 3, "then": f"q{qid}-send",
+        }
+
+    return {
         "id": f"q{qid}",
         "branch": [cond("questComplete", id=qid, then=f"q{qid}-send")],
-        "do": [{"act": "acceptQuest", "id": qid},
-               {"act": "join", "map": quest.map, "cell": quest.cell, "pad": quest.pad}],
-        "wait": [cond("here", map=quest.map, cell=quest.cell),
-                 cond("questInHand", id=qid)],
-        "timeout": 30, "retry": 3, "then": after,
+        "do": [accept] + wear + [join],
+        "wait": where,
+        "timeout": 30, "retry": 3, "then": quest_body_head(quest),
+    }
+
+
+def quest_body_head(quest):
+    qid = quest.id
+    if quest.kind in (FIGHT, MIX):
+        return f"q{qid}-farm"
+    if quest.moves_to_blank():
+        return f"q{qid}-move"
+    return f"q{qid}-click" if quest.kind == MAP else f"q{qid}-a"
+
+
+def farm_steps(quest, gate=None):
+    """Fight until the quest is ready, or until the counter a mix wants is met.
+
+    The wait ends the step often enough that the branch is read again, which is
+    how one step both farms and notices that the other counter is already full.
+    """
+    qid = quest.id
+    branch = [cond("questComplete", id=qid, then=f"q{qid}-send")]
+    wait = [cond("questComplete", id=qid)]
+    if gate:
+        item, count = gate
+        branch.append(cond("tempAtLeast", item=item, value=count,
+                           then=f"q{qid}-a"))
+        wait.append(cond("tempAtLeast", item=item, value=count))
+    wait.append(cond("elapsed", value=15))
+
+    return [{
+        "id": f"q{qid}-farm",
+        "branch": branch,
+        "do": [{"act": "aggro"}, {"act": "fight"}],
+        "wait": [cond("any", of=wait)],
+        "timeout": 0, "then": f"q{qid}-farm",
     }]
 
-    if blank:
-        out.append({
-            "id": f"q{qid}-move",
-            "do": [{"act": "moveTo", "cell": "Blank", "pad": "Bloom"}],
-            "wait": [cond("here", map=quest.map, cell="Blank")],
-            "timeout": 20, "retry": 3,
-            "then": f"q{qid}-click" if quest.kind == MAP else f"q{qid}-a",
-        })
 
-    if quest.kind == FIGHT:
-        out.append({
-            "id": f"q{qid}-farm",
-            "branch": [cond("questComplete", id=qid, then=f"q{qid}-send")],
-            "do": [{"act": "aggro"}, {"act": "fight"}],
-            "wait": [cond("any", of=[cond("questComplete", id=qid),
-                                     cond("elapsed", value=15)])],
-            "timeout": 0, "then": f"q{qid}-farm",
-        })
+def click_loop(quest):
+    qid = quest.id
+    return [{
+        "id": f"q{qid}-click",
+        "branch": [cond("questComplete", id=qid, then=f"q{qid}-send")],
+        "do": [{"act": "stopFight"}, {"act": "mapItem", "id": quest.items[0]}],
+        "wait": [cond("questComplete", id=qid)],
+        "timeout": 3, "retry": 60, "then": f"q{qid}-send",
+    }]
 
-    elif quest.kind == MAP:
+
+def click_steps(quest, ids):
+    """One step per map item, cycling: a click is a packet, not a walk."""
+    qid = quest.id
+    legs = "abc"[:len(ids)]
+    out = []
+    for at, leg in enumerate(legs):
+        following = legs[(at + 1) % len(legs)]
         out.append({
-            "id": f"q{qid}-click",
+            "id": f"q{qid}-{leg}",
             "branch": [cond("questComplete", id=qid, then=f"q{qid}-send")],
             "do": [{"act": "stopFight"},
-                   {"act": "mapItem", "id": quest.items[0]}],
-            "wait": [cond("questComplete", id=qid)],
-            "timeout": 3, "retry": 60, "then": f"q{qid}-send",
+                   {"act": "mapItem", "id": ids[at]}],
+            "wait": [cond("any", of=[cond("questComplete", id=qid),
+                                     cond("elapsed", value=3)])],
+            "then": f"q{qid}-{following}",
         })
+    return out
 
-    elif quest.kind == MULTI:
-        legs = "abc"[:len(quest.items)]
-        for at, leg in enumerate(legs):
-            following = legs[(at + 1) % len(legs)]
-            out.append({
-                "id": f"q{qid}-{leg}",
-                "branch": [cond("questComplete", id=qid, then=f"q{qid}-send")],
-                "do": [{"act": "stopFight"},
-                       {"act": "mapItem", "id": quest.items[at]}],
-                "wait": [cond("any", of=[cond("questComplete", id=qid),
-                                         cond("elapsed", value=3)])],
-                "then": f"q{qid}-{following}",
-            })
 
-    out.append(send_step(quest, then))
+def blank_move(quest):
+    qid = quest.id
+    return {
+        "id": f"q{qid}-move",
+        "do": [{"act": "moveTo", "cell": "Blank", "pad": "Bloom"}],
+        "wait": [cond("here", map=quest.map, cell="Blank")],
+        "timeout": 20, "retry": 3,
+        "then": f"q{qid}-click" if quest.kind == MAP else f"q{qid}-a",
+    }
+
+
+def meta_check(quest):
+    qid = quest.id
+    branch = [cond("questComplete", id=qid, then=f"q{qid}-send")]
+    for item, sub in quest.needs:
+        branch.append(cond("not", of=cond("tempAtLeast", item=item, value=1),
+                           then=f"q{sub}"))
+    return {"id": f"q{qid}-check", "branch": branch, "else": f"q{qid}-send"}
+
+
+def quest_body(quest):
+    if quest.kind == META:
+        return [meta_check(quest)]
+    if quest.kind == TALK:
+        return []
+
+    out = []
+    if quest.moves_to_blank():
+        out.append(blank_move(quest))
+
+    if quest.kind == FIGHT:
+        out += farm_steps(quest)
+    elif quest.kind == MIX:
+        out += farm_steps(quest, quest.drop) + click_steps(quest, quest.items)
+    elif quest.kind == MAP:
+        out += click_loop(quest)
+    else:
+        out += click_steps(quest, quest.items)
+    return out
+
+
+def roll_step(quest, then):
+    """Take a chance quest again while its turn-in has not paid the item.
+
+    The reward is a roll, so one turn-in is not the answer: the counter is read
+    again after each one, and the quest is taken from the top when it is short.
+    """
+    qid = quest.id
+    return {
+        "id": f"q{qid}-roll",
+        "branch": [cond("tempAtLeast", item=quest.roll, value=1, then=then)],
+        "else": f"q{qid}",
+    }
+
+
+def quest_steps(quest, then):
+    after = quest.then or then
+    out = [quest_head(quest)] + quest_body(quest)
+
+    if quest.roll:
+        out.append(send_step(quest, f"q{quest.id}-roll"))
+        out.append(roll_step(quest, after))
+    else:
+        out.append(send_step(quest, after))
     return out
 
 
@@ -412,16 +536,32 @@ def load_routes():
 
 
 def check_quests(label, quests):
+    ids = {quest.id for quest in quests}
     for quest in quests:
         for field in ("id", "kind", "map"):
             if getattr(quest, field) in (None, ""):
                 fail(f"{label}: quest {quest.id}: missing {field}")
         if quest.kind not in KINDS:
             fail(f"{label}: quest {quest.id}: unknown kind {quest.kind!r}")
-        if quest.kind in (MAP, MULTI) and not quest.items:
+        if quest.kind in (MAP, MULTI, MIX) and not quest.items:
             fail(f"{label}: quest {quest.id}: needs map item ids")
         if quest.kind == MULTI and len(quest.items) > 3:
             fail(f"{label}: quest {quest.id}: at most three legs")
+        if quest.kind == MIX and not quest.drop:
+            fail(f"{label}: quest {quest.id}: a mix needs the drop it farms for")
+        if quest.blank is not None and quest.kind not in (MAP, MULTI):
+            fail(f"{label}: quest {quest.id}: only a click chooses its own cell")
+        if quest.kind == META and not quest.needs:
+            fail(f"{label}: quest {quest.id}: a meta needs the items it turns in")
+        if quest.roll and quest.kind != FIGHT:
+            fail(f"{label}: quest {quest.id}: only a fight pays a roll")
+        for item, sub in quest.needs:
+            if sub not in ids:
+                fail(f"{label}: quest {quest.id}: {item} is paid by unknown quest {sub}")
+        if quest.then:
+            sub = quest.then.lstrip("q")
+            if not sub.isdigit() or int(sub) not in ids:
+                fail(f"{label}: quest {quest.id}: then names unknown quest {quest.then!r}")
 
 
 def app_module():
