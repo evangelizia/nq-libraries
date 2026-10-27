@@ -173,3 +173,7 @@ python3 tools/gen.py --docs      # rebuild this file
 python3 tools/gen.py --check     # diff the catalog against the client
 python3 build_index.py --push    # publish
 ```
+
+A build also runs every file it writes through the client's validator when
+the client checkout is next to this repo, so an unknown verb or condition
+fails at generation instead of in the swf.

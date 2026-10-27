@@ -13,6 +13,9 @@ later by hand.
                                      # own validator, when this repo sits inside
                                      # a client checkout
 
+A build runs each file it writes through that same validator when it is there, so
+a route that names a verb the client does not have fails here and not in the swf.
+
 A route file holds two names: PRESET (everything in the preset except the steps)
 and QUESTS (one Quest per quest, in the order the story runs them).
 """
@@ -416,10 +419,22 @@ def check_quests(label, quests):
             fail(f"{label}: quest {quest.id}: at most three legs")
 
 
+def app_module():
+    """The client's own validator, when this repo sits inside a checkout."""
+    path = ROOT.parent.parent / "build" / "bots.py"
+    if not path.is_file():
+        return None
+    spec = importlib.util.spec_from_file_location("client_bots", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 def build_all():
     routes = load_routes()
     if not routes:
         fail(f"no routes in {ROUTES}")
+    client = app_module()
 
     for stem, (meta, quests) in routes.items():
         label = f"{stem}.py"
@@ -434,6 +449,8 @@ def build_all():
 
         path = BOTS / f"{stem}.json"
         path.write_text(text, encoding="utf-8")
+        if client is not None:
+            client.check_preset(path)
         print(f"   {path.relative_to(ROOT)}: {len(preset['steps'])} steps, "
               f"{len(text)} bytes")
 
@@ -540,6 +557,10 @@ def api_docs():
         "python3 build_index.py --push    # publish",
         "```",
         "",
+        "A build also runs every file it writes through the client's validator when",
+        "the client checkout is next to this repo, so an unknown verb or condition",
+        "fails at generation instead of in the swf.",
+        "",
     ]
     return "\n".join(out)
 
@@ -547,13 +568,9 @@ def api_docs():
 # ------------------------------------------------------------------- check
 
 def app_catalog():
-    """The client's own validator lists, when this repo sits inside a checkout."""
-    path = ROOT.parent.parent / "build" / "bots.py"
-    if not path.is_file():
+    module = app_module()
+    if module is None:
         return None
-    spec = importlib.util.spec_from_file_location("client_bots", path)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
     return {
         "verbs": set(module.VERBS),
         "waits": set(module.WAITS),
