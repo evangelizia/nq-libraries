@@ -32,9 +32,9 @@ ROUTES = TOOLS / "routes"
 BOTS = ROOT / "bots"
 DOCS = ROOT / "docs"
 
-FIGHT, MAP, MULTI, TALK, MIX, META = ("fight", "map", "multi", "talk", "mix",
-                                      "meta")
-KINDS = (FIGHT, MAP, MULTI, TALK, MIX, META)
+FIGHT, MAP, MULTI, TALK, MIX, META, HUNT = (
+    "fight", "map", "multi", "talk", "mix", "meta", "hunt")
+KINDS = (FIGHT, MAP, MULTI, TALK, MIX, META, HUNT)
 
 GAP = object()
 
@@ -52,7 +52,10 @@ class Quest(NamedTuple):
     `roll` is the temp item a fight has to keep taking the quest again for,
     because the turn-in only pays it by chance. `needs` pairs the temp items a
     meta turns in with the quest that pays each, and the step it generates sends
-    the character to whichever one is still missing. `gear` is worn on entry, for
+    the character to whichever one is still missing. A hunt uses the same field
+    for the counters it farms itself: `(item, count, cell, pad)`, one leg per
+    cell, checked in order so a quest that pays its counters in two rooms works
+    without a second quest in the table. `gear` is worn on entry, for
     a fight the game will not let a character win without it. `then` is where a
     quest goes when it is done, for a group of quests that feed one turn-in: they
     all report back to that turn-in instead of to the chain.
@@ -351,6 +354,8 @@ def quest_body_head(quest):
     qid = quest.id
     if quest.kind in (FIGHT, MIX):
         return f"q{qid}-farm"
+    if quest.kind == HUNT:
+        return f"q{qid}-check"
     if quest.moves_to_blank():
         return f"q{qid}-move"
     return f"q{qid}-click" if quest.kind == MAP else f"q{qid}-a"
@@ -443,11 +448,45 @@ def meta_check(quest):
     return {"id": f"q{qid}-check", "branch": branch, "else": f"q{qid}-send"}
 
 
+def hunt_check(quest):
+    qid = quest.id
+    branch = [cond("questComplete", id=qid, then=f"q{qid}-send")]
+    for at, (item, count, cell, pad) in enumerate(quest.needs):
+        branch.append(cond("not", of=cond("tempAtLeast", item=item, value=count),
+                           then=f"q{qid}-hunt-{'abc'[at]}"))
+    return {"id": f"q{qid}-check", "branch": branch, "else": f"q{qid}-send"}
+
+
+def hunt_steps(quest):
+    """Farm one temp counter per cell, handing back to the check between legs.
+
+    A quest whose turn-in wants counters paid in different rooms cannot sit in
+    one farm step: it has to walk to whichever counter is still short. The
+    check re-enters the leg that is missing, so a death or a map correction only
+    costs the loop that was running.
+    """
+    qid = quest.id
+    out = [hunt_check(quest)]
+    for at, (item, count, cell, pad) in enumerate(quest.needs):
+        out.append({
+            "id": f"q{qid}-hunt-{'abc'[at]}",
+            "do": [{"act": "moveTo", "cell": cell, "pad": pad},
+                   {"act": "aggro"}, {"act": "fight"}],
+            "wait": [cond("any", of=[cond("tempAtLeast", item=item, value=count),
+                                     cond("questComplete", id=qid),
+                                     cond("elapsed", value=15)])],
+            "timeout": 0, "then": f"q{qid}-check",
+        })
+    return out
+
+
 def quest_body(quest):
     if quest.kind == META:
         return [meta_check(quest)]
     if quest.kind == TALK:
         return []
+    if quest.kind == HUNT:
+        return hunt_steps(quest)
 
     out = []
     if quest.moves_to_blank():
@@ -566,11 +605,30 @@ def check_quests(label, quests):
             fail(f"{label}: quest {quest.id}: only a click chooses its own cell")
         if quest.kind == META and not quest.needs:
             fail(f"{label}: quest {quest.id}: a meta needs the items it turns in")
+        if quest.kind == HUNT:
+            if not quest.needs:
+                fail(f"{label}: quest {quest.id}: a hunt needs the counters it farms")
+            if len(quest.needs) > 3:
+                fail(f"{label}: quest {quest.id}: at most three hunt legs")
+            for need in quest.needs:
+                if len(need) != 4:
+                    fail(f"{label}: quest {quest.id}: a hunt leg is "
+                         "(item, count, cell, pad)")
+                item, count, cell, pad = need
+                if not isinstance(item, str) or not item:
+                    fail(f"{label}: quest {quest.id}: a hunt leg needs an item")
+                if not isinstance(count, int) or count < 1:
+                    fail(f"{label}: quest {quest.id}: {item} needs a count")
+                if not isinstance(cell, str) or not cell:
+                    fail(f"{label}: quest {quest.id}: {item} needs a cell")
+                if not isinstance(pad, str) or not pad:
+                    fail(f"{label}: quest {quest.id}: {item} needs a pad")
         if quest.roll and quest.kind != FIGHT:
             fail(f"{label}: quest {quest.id}: only a fight pays a roll")
-        for item, sub in quest.needs:
-            if sub not in ids:
-                fail(f"{label}: quest {quest.id}: {item} is paid by unknown quest {sub}")
+        if quest.kind == META:
+            for item, sub in quest.needs:
+                if sub not in ids:
+                    fail(f"{label}: quest {quest.id}: {item} is paid by unknown quest {sub}")
         if quest.then:
             sub = quest.then.lstrip("q")
             if not sub.isdigit() or int(sub) not in ids:
@@ -661,7 +719,7 @@ def api_docs():
         "`QUESTS`; `tools/gen.py` writes `bots/<id>.json` from them:",
         "",
         "```python",
-        "from gen import Quest, Reward, FIGHT, MAP, MULTI",
+        "from gen import Quest, Reward, FIGHT, MAP, MULTI, HUNT",
         "",
         "PRESET = {",
         '    "id": "chaos1",',
@@ -679,13 +737,20 @@ def api_docs():
         '    Quest(245, FIGHT, "mobius", "New5", "Left"),',
         '    Quest(246, MAP, "mobius", "Enter", "Spawn", items=[42], blank=False),',
         '    Quest(271, MULTI, "hydra", "Enter", "Spawn", items=[52, 51, 50]),',
+        '    Quest(353, HUNT, "dwarfprison", "Enter", "Spawn",',
+        '          needs=[("Balboa Core", 4, "r9", "Right"),',
+        '                 ("Magnesium Flare", 1, "r8", "Right")]),',
         "]",
         "```",
         "",
         "What it builds: `route` asks the server for every quest row, `pick` takes",
         "whatever is in hand or next to be offered, and each quest expands into",
         "accept-and-walk, farm or click, turn-in. `MULTI` cycles its ids, which is",
-        "what a quest with more than one map item needs. `once` routes remember",
+        "what a quest with more than one map item needs. `HUNT` farms temp",
+        "counters in more than one cell: each leg walks to its cell and fights",
+        "until its counter is met, and the check step sends the character back to",
+        "whichever counter is still short, so a turn-in that wants drops from two",
+        "rooms is one quest line rather than two. `once` routes remember",
         "what they handed in, so `pick` leaves a finished quest alone and the run",
         "ends itself when nothing is left. `done` replaces the message it ends",
         "with; `reward` appends a shop visit, and a step there goes straight to",

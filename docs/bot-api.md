@@ -120,7 +120,7 @@ A story is one line per quest. `tools/routes/<id>.py` holds `PRESET` and
 `QUESTS`; `tools/gen.py` writes `bots/<id>.json` from them:
 
 ```python
-from gen import Quest, Reward, FIGHT, MAP, MULTI
+from gen import Quest, Reward, FIGHT, MAP, MULTI, HUNT
 
 PRESET = {
     "id": "chaos1",
@@ -138,13 +138,20 @@ QUESTS = [
     Quest(245, FIGHT, "mobius", "New5", "Left"),
     Quest(246, MAP, "mobius", "Enter", "Spawn", items=[42], blank=False),
     Quest(271, MULTI, "hydra", "Enter", "Spawn", items=[52, 51, 50]),
+    Quest(353, HUNT, "dwarfprison", "Enter", "Spawn",
+          needs=[("Balboa Core", 4, "r9", "Right"),
+                 ("Magnesium Flare", 1, "r8", "Right")]),
 ]
 ```
 
 What it builds: `route` asks the server for every quest row, `pick` takes
 whatever is in hand or next to be offered, and each quest expands into
 accept-and-walk, farm or click, turn-in. `MULTI` cycles its ids, which is
-what a quest with more than one map item needs. `once` routes remember
+what a quest with more than one map item needs. `HUNT` farms temp
+counters in more than one cell: each leg walks to its cell and fights
+until its counter is met, and the check step sends the character back to
+whichever counter is still short, so a turn-in that wants drops from two
+rooms is one quest line rather than two. `once` routes remember
 what they handed in, so `pick` leaves a finished quest alone and the run
 ends itself when nothing is left. `done` replaces the message it ends
 with; `reward` appends a shop visit, and a step there goes straight to
