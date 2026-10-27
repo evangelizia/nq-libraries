@@ -93,9 +93,10 @@ COMBAT_KEYS = [
 
 VERBS = [
     ("join", "map, cell, pad, room",
-     "Transfer to a map, or walk to the cell when that map is already loaded. A "
-     "transfer the client's own cooldown refuses is held and re-sent instead of "
-     "burning the step's timeout."),
+     "Transfer to a map, or walk to the cell when that map is already loaded. "
+     "The join counts as done when the character is on that map, not when the "
+     "packet leaves, so a transfer the game refuses is held and re-sent rather "
+     "than burning the step's timeout on a map it was never in."),
     ("moveTo", "cell, pad", "Walk to a cell in the map already loaded."),
     ("exit", "id", "Take a map pad by its id."),
     ("exitTo", "cell", "Take the pad that leads to that cell."),
