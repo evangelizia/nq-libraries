@@ -392,16 +392,28 @@ def click_loop(quest):
     }]
 
 
-def click_steps(quest, ids):
-    """One step per map item, cycling: a click is a packet, not a walk."""
+def click_steps(quest, ids, gate=None):
+    """One step per map item, cycling: a click is a packet, not a walk.
+
+    With a `gate`, a leg that finds the counter the farm was for short goes back
+    to the farm instead of clicking. Grinding an incense spends the reagent, so
+    the quest alternates between the two until the count and the clicks hold at
+    the same time.
+    """
     qid = quest.id
     legs = "abc"[:len(ids)]
     out = []
     for at, leg in enumerate(legs):
         following = legs[(at + 1) % len(legs)]
+        branch = [cond("questComplete", id=qid, then=f"q{qid}-send")]
+        if gate:
+            item, count = gate
+            branch.append(cond("not",
+                               of=cond("tempAtLeast", item=item, value=count),
+                               then=f"q{qid}-farm"))
         out.append({
             "id": f"q{qid}-{leg}",
-            "branch": [cond("questComplete", id=qid, then=f"q{qid}-send")],
+            "branch": branch,
             "do": [{"act": "stopFight"},
                    {"act": "mapItem", "id": ids[at]}],
             "wait": [cond("any", of=[cond("questComplete", id=qid),
@@ -444,7 +456,8 @@ def quest_body(quest):
     if quest.kind == FIGHT:
         out += farm_steps(quest)
     elif quest.kind == MIX:
-        out += farm_steps(quest, quest.drop) + click_steps(quest, quest.items)
+        out += farm_steps(quest, quest.drop) + click_steps(quest, quest.items,
+                                                           quest.drop)
     elif quest.kind == MAP:
         out += click_loop(quest)
     else:

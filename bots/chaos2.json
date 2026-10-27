@@ -4,7 +4,7 @@
   "name": "2nd Chaos Lord · Mirror Portal",
   "bundle": false,
   "once": true,
-  "notes": "The whole 2nd Chaos Lord line in one run: the mirror chains in /battleoff, /brightfall and /overworld, then Bardolph's seven in /reddeath, then the three ingredients of the Shriekward Potion and the two beasts in /mirrorportal. It is a one-pass route (`once`), so a quest this character has handed in is remembered and never taken again, and the run stops itself once nothing is left; each pass works on whatever is already in hand, otherwise the next quest of the chain the server actually offers, so a restart picks up where the character is. Nine of the 38 are not fights: 2909, 2910, 2915, 2916, 2923, 2927, 2931, 3168 and 3183 are map items, clicked by the id the map's own sparkle sends, on a loop until the quest asks for nothing. Those stop combat and stand on the Blank cell first, except 3183, which clicks from the town's spawn cell: a click is a packet and does not need the sparkle in sight. 2918 is a talk: it is ready the moment the character walks into /overworld, so its step waits for that rather than for a fight. 3167 wants five Boneweed before it wants its two incenses, so it farms first and clicks after, in one step pair. 3184, 3185 and 3186 are the three ingredients, and each pays its counter by chance, so the route takes the quest again until the counter lands instead of handing in a potion it cannot make; 3187 is the turn-in that wants all three, so it is accepted first and its check step sends the character to whichever counter is still missing, which is the order the reference bot runs them in. 3188 needs the potion worn, so its step equips it and only warns when the bag has none. A fight step hands over the moment the quest reads complete rather than finishing the mob, and every turn-in stops combat first, so a finished quest never keeps the boss angry. Loot is claimed as it falls (`pickup`): these quests pay real drops with names a route cannot list ahead of time. 3173 and 3174 are side quests the line does not need.",
+  "notes": "The whole 2nd Chaos Lord line in one run: the mirror chains in /battleoff, /brightfall and /overworld, then Bardolph's seven in /reddeath, then the three ingredients of the Shriekward Potion and the two beasts in /mirrorportal. It is a one-pass route (`once`), so a quest this character has handed in is remembered and never taken again, and the run stops itself once nothing is left; each pass works on whatever is already in hand, otherwise the next quest of the chain the server actually offers, so a restart picks up where the character is. Nine of the 38 are not fights: 2909, 2910, 2915, 2916, 2923, 2927, 2931, 3168 and 3183 are map items, clicked by the id the map's own sparkle sends, on a loop until the quest asks for nothing. Those stop combat and stand on the Blank cell first, except 3183, which clicks from the town's spawn cell: a click is a packet and does not need the sparkle in sight. 2918 is a talk: it is ready the moment the character walks into /overworld, so its step waits for that rather than for a fight. 3167 wants five Boneweed before its two incenses and grinding one spends a Boneweed, so it alternates rather than doing them in turn: the farm hands over at five, a click that finds the count short hands back to the farm, and the lap settles only with the count and both counters in hand. 3184, 3185 and 3186 are the three ingredients, and each pays its counter by chance, so the route takes the quest again until the counter lands instead of handing in a potion it cannot make; 3187 is the turn-in that wants all three, so it is accepted first and its check step sends the character to whichever counter is still missing, which is the order the reference bot runs them in. 3188 needs the potion worn, so its step equips it and only warns when the bag has none. A fight step hands over the moment the quest reads complete rather than finishing the mob, and every turn-in stops combat first, so a finished quest never keeps the boss angry. Loot is claimed as it falls (`pickup`): these quests pay real drops with names a route cannot list ahead of time. 3173 and 3174 are side quests the line does not need.",
   "pickup": true,
   "combat": {"target": "nearest", "rest": 60},
   "stop": [
@@ -1136,7 +1136,10 @@
     },
     {
       "id": "q3167-a",
-      "branch": [{"when": "questComplete", "id": 3167, "then": "q3167-send"}],
+      "branch": [
+        {"when": "questComplete", "id": 3167, "then": "q3167-send"},
+        {"when": "not", "of": {"when": "tempAtLeast", "item": "Boneweed", "value": 5}, "then": "q3167-farm"}
+      ],
       "do": [{"act": "stopFight"}, {"act": "mapItem", "id": 2178}],
       "wait": [
         {"when": "any", "of": [
@@ -1148,7 +1151,10 @@
     },
     {
       "id": "q3167-b",
-      "branch": [{"when": "questComplete", "id": 3167, "then": "q3167-send"}],
+      "branch": [
+        {"when": "questComplete", "id": 3167, "then": "q3167-send"},
+        {"when": "not", "of": {"when": "tempAtLeast", "item": "Boneweed", "value": 5}, "then": "q3167-farm"}
+      ],
       "do": [{"act": "stopFight"}, {"act": "mapItem", "id": 2179}],
       "wait": [
         {"when": "any", "of": [
