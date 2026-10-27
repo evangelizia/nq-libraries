@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Regenerates index.json from class/ and bots/.
+"""Regenerates index.json from class/, bots/ and lua-bots/.
 
 Deterministic on purpose: no timestamps, entries sorted by file name, so the
 index only changes when the data changes and a diff means something.
@@ -8,7 +8,9 @@ index only changes when the data changes and a diff means something.
     python3 build_index.py --push   # rewrite, commit, push
 
 Each entry carries the sha256 of its file, so a client can tell a stale cache
-from a fresh one without downloading everything again.
+from a fresh one without downloading everything again. A Lua bot is a folder -
+lua-bots/<id>/<id>.json beside <id>.lua - and its entry names both files, each
+with its own digest. A preset with "publish": false builds but is not listed.
 """
 
 import hashlib
@@ -18,13 +20,17 @@ import subprocess
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent
-KINDS = ("class", "bots")
+KINDS = ("class", "bots", "lua-bots")
 SCHEMA = 1
 
 
 def fail(message):
     print(f"index error: {message}", file=sys.stderr)
     sys.exit(1)
+
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def entry(path):
@@ -36,6 +42,11 @@ def entry(path):
 
     if not isinstance(data, dict):
         fail(f"{path.name}: must be an object")
+
+    # A preset that is not published yet still builds, but no index row names
+    # it, so a client cannot fetch what the author has not released.
+    if data.get("publish") is False:
+        return None
 
     pid = data.get("id")
     if not isinstance(pid, str) or not pid:
@@ -49,25 +60,50 @@ def entry(path):
         out["aliases"] = data["aliases"]
 
     out["file"] = path.relative_to(ROOT).as_posix()
-    out["sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
+    out["sha256"] = digest(path)
     return out
+
+
+def body_of(manifest, pid):
+    """The Lua body that sits beside its manifest in lua-bots/<id>/."""
+    if manifest.parent.name != pid:
+        fail(f"{manifest.name}: lua-bots needs the folder to be named for the id")
+    body = manifest.with_suffix(".lua")
+    if not body.is_file():
+        fail(f"{manifest.name}: no {body.name} beside it")
+    if body.stat().st_size == 0:
+        fail(f"{body.name}: empty route")
+    return body
 
 
 def build():
     index = {"schema": SCHEMA}
     total = 0
+    seen = {}
 
     for kind in KINDS:
         folder = ROOT / kind
         rows = []
-        seen = set()
 
         if folder.is_dir():
-            for path in sorted(folder.glob("*.json")):
+            glob = "*/*.json" if kind == "lua-bots" else "*.json"
+            for path in sorted(folder.glob(glob)):
                 row = entry(path)
-                if row["id"] in seen:
-                    fail(f"duplicate id {row['id']!r} in {kind}/")
-                seen.add(row["id"])
+                if row is None:
+                    print(f"   {kind}: {path.name} is not published yet")
+                    continue
+
+                pid = row["id"]
+                if pid in seen:
+                    fail(f"duplicate id {pid!r} in {kind}/, also in {seen[pid]}")
+                seen[pid] = f"{kind}/"
+
+                if kind == "lua-bots":
+                    body = body_of(path, pid)
+                    row["lua"] = {
+                        "file": body.relative_to(ROOT).as_posix(),
+                        "sha256": digest(body),
+                    }
                 rows.append(row)
 
         index[kind] = rows

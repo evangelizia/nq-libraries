@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "id": "yokairep",
+  "name": "Yokai Reputation · Pockey Challenge",
+  "bundle": true,
+  "pickup": true,
+  "notes": "Farms Yokai reputation at /dragonkoiz until the faction reaches rank 10. The repeatable Pockey Challenge (383) is accepted, worked at the recorded t1 cell and handed in as soon as the client calls it complete; the rank is the only exit, because a repeatable quest never stops being offered. A character still on the boat works 380, 381 and 382 first, which is what opens the map, then falls into the same cycle; one already past them finds nothing to take there and goes straight to the koi. Every leg carries the map, cell and pad the line was recorded with, and a pad the cell refuses falls through to the next. The piece counter is read for the panel while the quest's own state decides the exit, so a name the server spells differently cannot trap the farm. The finalist medal is clicked from the Blank cell, where nothing can reach the character; every turn-in stops combat first, and a refused turn-in is re-sent with a reload before the run gives up. Loot is claimed as it falls (`pickup`).",
+  "combat": {"target": "nearest", "rest": 60},
+  "stop": [
+    {"when": "bagFreeBelow", "value": 2, "say": "bag almost full"},
+    {"when": "runFor", "value": 21600, "say": "six hours on this route"}
+  ]
+}

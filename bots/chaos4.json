@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "id": "chaos4",
+  "name": "4th Chaos Lord · Kitsune (Yokai)",
+  "bundle": true,
+  "publish": false,
+  "once": true,
+  "pickup": true,
+  "notes": "The whole 4th Chaos Lord line in one run: the Yokai boat, the Hachiko zodiac, the bamboo forest, the junkyard, the river and the grave, then O-Dokuro and Kitsune herself. It is a one-pass route (`once`), so a quest this character has handed in is remembered and never taken again, and the run ends itself once nothing is left; each pass works on whatever is already in hand, otherwise the furthest quest the server still offers, so a restart picks up where the character is. The route body is routes/chaos4.lua: this manifest is only the name, the combat settings, the loot and the guards. Hunts carry the map, cell and pad the line was recorded with, so the route farms the room a counter is actually paid in; a move is only a request, so arrival is read from the map frame, a pad the cell refuses falls through to the next, and a cell that takes none is re-entered at the cell itself. A quest that wants a temp counter farms until the counter is met while a plain kill leg farms until the quest reads complete. 382, 466, 469 and 474 click a sparkle as well as fight, by the id the map's own sparkle sends, from the Blank cell where nothing can reach the character; every turn-in stops combat first, and a refused turn-in is re-sent with a reload before the run gives up. Loot is claimed as it falls (`pickup`): these quests pay real drops with names a route cannot list ahead of time.",
+  "combat": {"target": "nearest", "rest": 60},
+  "stop": [
+    {"when": "bagFreeBelow", "value": 2, "say": "bag almost full"},
+    {"when": "runFor", "value": 21600, "say": "six hours on this route"}
+  ]
+}

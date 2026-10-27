@@ -70,5 +70,17 @@
       "file": "bots/shadowbattleon.json",
       "sha256": "6c421f3d411bc0a868dfb8b27baf0e23fcd743ecaf5de9cccb79b19fe8623003"
     }
+  ],
+  "lua-bots": [
+    {
+      "id": "yokairep",
+      "name": "Yokai Reputation · Pockey Challenge",
+      "file": "lua-bots/yokairep/yokairep.json",
+      "sha256": "dd7173716a7957e7aa2e85c7725cc578adfe2bc6feb3b61b397c0ad5707543da",
+      "lua": {
+        "file": "lua-bots/yokairep/yokairep.lua",
+        "sha256": "eac4100e5e52f4f4cea8b474b07b4c5fa6ec2b663ba4a5e00f5fcb895682adad"
+      }
+    }
   ]
 }
